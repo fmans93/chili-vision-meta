@@ -1,0 +1,204 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #000;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+#app {
+    position: relative;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+    background: #000;
+}
+
+#camera {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+#vision {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   TOP
+========================= */
+
+#topHUD {
+    position: absolute;
+
+    top: 18px;
+    left: 20px;
+    right: 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    color: white;
+
+    text-shadow:
+        0 0 8px #00ffcc;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+.sub {
+    margin-top: 4px;
+
+    color: #00ffcc;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+#status {
+    padding: 7px 10px;
+
+    border: 1px solid #00ffcc;
+
+    color: #00ffcc;
+
+    font-size: 11px;
+
+    background:
+        rgba(0,0,0,.65);
+}
+
+
+/* =========================
+   DATA PANEL
+========================= */
+
+#modePanel {
+    position: absolute;
+
+    top: 90px;
+    left: 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 95px);
+
+    gap: 6px;
+
+    color: #8affdf;
+
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+#modePanel div {
+    padding: 7px;
+
+    border-left:
+        2px solid #00ffcc;
+
+    background:
+        rgba(0,0,0,.55);
+}
+
+#modePanel strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: white;
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   ALERT
+========================= */
+
+#alertBox {
+    position: absolute;
+
+    top: 20px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    min-width: 240px;
+
+    padding: 9px 18px;
+
+    text-align: center;
+
+    border:
+        1px solid #00ff88;
+
+    background:
+        rgba(0,20,15,.75);
+
+    color: #00ff88;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    opacity: 0;
+}
+
+
+/* =========================
+   BOTTOM
+========================= */
+
+#bottomHUD {
+    position: absolute;
+
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #00ffcc;
+
+    font-size: 11px;
+
+    letter-spacing: 1px;
+
+    text-shadow:
+        0 0 8px #00ffcc;
+}
