@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,user-scalable=no"
+>
+
+<title>CHILI // Glasses Gyro Test</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  background: #020806;
+  color: #00ff88;
+
+  font-family:
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* GRID */
+
+.grid {
+  position: fixed;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(0,255,136,.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,255,136,.07) 1px,
+      transparent 1px
+    );
+
+  background-size: 40px 40px;
+
+  pointer-events: none;
+}
+
+/* HEADER */
+
+.header {
+  position: fixed;
+
+  top: 18px;
+  left: 20px;
+
+  z-index: 20;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  margin-top: 5px;
+
+  color: #5ba882;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+}
+
+/* STATUS */
+
+#status {
+  position: fixed;
+
+  top: 20px;
+  right: 20px;
+
+  padding: 8px 12px;
+
+  border: 1px solid #ff3b4f;
+
+  color: #ff3b4f;
+
+  font-size: 11px;
+}
+
+/* SENSOR DATA */
+
+.data {
+  position: fixed;
+
+  left: 20px;
+  bottom: 25px;
+
+  width: 230px;
+
+  padding: 12px;
+
+  background: rgba(0,15,9,.8);
+
+  border: 1px solid rgba(0,255,136,.4);
+}
+
+.row {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin: 6px 0;
+
+  font-size: 12px;
+}
+
+.label {
+  color: #6eaa8d;
+}
+
+.value {
+  color: #00ff88;
+
+  font-weight: bold;
+}
+
+/* RETICLE */
+
+#reticle {
+  position: fixed;
+
+  left: 50%;
+  top: 50%;
+
+  width: 70px;
+  height: 70px;
+
+  margin-left: -35px;
+  margin-top: -35px;
+
+  border: 2px solid #00ff88;
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 18px rgba(0,255,136,.4);
+
+  pointer-events: none;
+}
+
+#reticle::before,
+#reticle::after {
+  content: "";
+
+  position: absolute;
+
+  background: #00ff88;
+}
+
+#reticle::before {
+  width: 100px;
+  height: 1px;
+
+  left: -17px;
+  top: 33px;
+}
+
+#reticle::after {
+  width: 1px;
+  height: 100px;
+
+  left: 33px;
+  top: -17px;
+}
+
+/* DOT */
+
+#target {
+  position: fixed;
+
+  width: 18px;
+  height: 18px;
+
+  border: 2px solid #38dfff;
+
+  border-radius: 50%;
+
+  left: 50%;
+  top: 50%;
+
+  margin-left: -9px;
+  margin-top: -9px;
+
+  box-shadow:
+    0 0 15px #38dfff;
+
+  pointer-events: none;
+}
+
+/* START */
+
+#start {
+  position: fixed;
+
+  z-index: 100;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #020806;
+}
+
+.start-title {
+  font-size: 32px;
+
+  font-weight: bold;
+
+  letter-spacing: 4px;
+
+  margin-bottom: 8px;
+}
+
+.start-sub {
+  color: #6eaa8d;
+
+  font-size: 11px;
+
+  margin-bottom: 25px;
+}
+
+button {
+  padding: 13px 24px;
+
+  border: 1px solid #00ff88;
+
+  background: rgba(0,255,136,.1);
+
+  color: #00ff88;
+
+  font-family: inherit;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00ff88;
+
+  color: #00150b;
+}
+
+#message {
+  margin-top: 15px;
+
+  color: #6eaa8d;
+
+  font-size: 10px;
+
+  max-width: 350px;
+
+  text-align: center;
+
+  line-height: 1.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<div class="header">
+
+  <div class="title">
+    CHILI MOTION
+  </div>
+
+  <div class="subtitle">
+    RAY-BAN SENSOR TEST
+  </div>
+
+</div>
+
+<div id="status">
+  WAITING FOR SENSOR
+</div>
+
+<div id="reticle"></div>
+
+<div id="target"></div>
+
+<div class="data">
+
+  <div class="row">
+    <span class="label">
+      YAW / ALPHA
+    </span>
+
+    <span
+      id="alpha"
+      class="value"
+    >
+      --
+    </span>
+  </div>
+
+  <div class="row">
+    <span class="label">
+      PITCH / BETA
+    </span>
+
+    <span
+      id="beta"
+      class="value"
+    >
+      --
+    </span>
+  </div>
+
+  <div class="row">
+    <span class="label">
+      ROLL / GAMMA
+    </span>
+
+    <span
+      id="gamma"
+      class="value"
+    >
+      --
+    </span>
+  </div>
+
+  <div class="row">
+    <span class="label">
+      EVENTS
+    </span>
+
+    <span
+      id="events"
+      class="value"
+    >
+      0
+    </span>
+  </div>
+
+  <div class="row">
+    <span class="label">
+      SENSOR FPS
+    </span>
+
+    <span
+      id="fps"
+      class="value"
+    >
+      0
+    </span>
+  </div>
+
+</div>
+
+<div id="start">
+
+  <div class="start-title">
+    CHILI
+  </div>
+
+  <div class="start-sub">
+    GLASSES MOTION SENSOR TEST
+  </div>
+
+  <button id="startButton">
+    ENABLE MOTION
+  </button>
+
+  <div id="message">
+    Turn your head left/right, look up/down,
+    and tilt your head after starting.
+  </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   CHILI RAY-BAN MOTION TEST
+
+   Tests standard browser DeviceOrientation events.
+
+   alpha = rotation around Z axis
+   beta  = front/back tilt
+   gamma = left/right tilt
+
+   Exact physical meaning depends on the browser/device
+   coordinate system.
+
+   The purpose of this test is to determine WHAT DATA the
+   Ray-Ban Display browser actually exposes.
+   ========================================================= */
+
+
+const alphaElement =
+  document.getElementById("alpha");
+
+const betaElement =
+  document.getElementById("beta");
+
+const gammaElement =
+  document.getElementById("gamma");
+
+const eventElement =
+  document.getElementById("events");
+
+const fpsElement =
+  document.getElementById("fps");
+
+const statusElement =
+  document.getElementById("status");
+
+const target =
+  document.getElementById("target");
+
+const startScreen =
+  document.getElementById("start");
+
+const message =
+  document.getElementById("message");
+
+
+let eventCount = 0;
+
+let fpsEvents = 0;
+
+let lastFPSCheck =
+  performance.now();
+
+
+/* BASELINE ORIENTATION */
+
+let baselineAlpha = null;
+let baselineBeta = null;
+let baselineGamma = null;
+
+
+/* SMOOTHED VALUES */
+
+let smoothX = 0;
+let smoothY = 0;
+
+
+/* =========================================================
+   ANGLE DIFFERENCE
+
+   Handles wraparound such as:
+
+   359 degrees → 0 degrees
+   ========================================================= */
+
+function angleDifference(
+  current,
+  baseline
+) {
+
+  let difference =
+    current - baseline;
+
+
+  while (difference > 180) {
+    difference -= 360;
+  }
+
+
+  while (difference < -180) {
+    difference += 360;
+  }
+
+
+  return difference;
+}
+
+
+/* =========================================================
+   SENSOR EVENT
+   ========================================================= */
+
+function handleOrientation(event) {
+
+  eventCount++;
+
+  fpsEvents++;
+
+
+  const alpha =
+    event.alpha;
+
+  const beta =
+    event.beta;
+
+  const gamma =
+    event.gamma;
+
+
+  alphaElement.textContent =
+    alpha == null
+      ? "NULL"
+      : alpha.toFixed(2);
+
+
+  betaElement.textContent =
+    beta == null
+      ? "NULL"
+      : beta.toFixed(2);
+
+
+  gammaElement.textContent =
+    gamma == null
+      ? "NULL"
+      : gamma.toFixed(2);
+
+
+  eventElement.textContent =
+    eventCount;
+
+
+  /*
+     If values are missing, the event exists but
+     usable orientation information isn't exposed.
+  */
+
+  if (
+    alpha == null &&
+    beta == null &&
+    gamma == null
+  ) {
+
+    statusElement.textContent =
+      "EVENT / NO VALUES";
+
+    statusElement.style.color =
+      "#ffd84a";
+
+    statusElement.style.borderColor =
+      "#ffd84a";
+
+    return;
+  }
+
+
+  statusElement.textContent =
+    "MOTION ONLINE";
+
+  statusElement.style.color =
+    "#00ff88";
+
+  statusElement.style.borderColor =
+    "#00ff88";
+
+
+  /*
+     Establish baseline from the first usable event.
+  */
+
+  if (
+    baselineAlpha === null
+  ) {
+
+    baselineAlpha =
+      alpha || 0;
+
+    baselineBeta =
+      beta || 0;
+
+    baselineGamma =
+      gamma || 0;
+  }
+
+
+  const yaw =
+    alpha == null
+      ? 0
+      : angleDifference(
+          alpha,
+          baselineAlpha
+        );
+
+
+  const pitch =
+    beta == null
+      ? 0
+      : beta - baselineBeta;
+
+
+  /*
+     Move our test target.
+
+     This is intentionally exaggerated so small sensor
+     movements are visible.
+  */
+
+  const sensitivity =
+    7;
+
+
+  const desiredX =
+    yaw * sensitivity;
+
+
+  const desiredY =
+    pitch * sensitivity;
+
+
+  /*
+     Basic smoothing.
+  */
+
+  smoothX +=
+    (desiredX - smoothX) *
+    0.15;
+
+
+  smoothY +=
+    (desiredY - smoothY) *
+    0.15;
+
+
+  /*
+     Keep marker on screen.
+  */
+
+  const maxX =
+    window.innerWidth *
+    0.42;
+
+
+  const maxY =
+    window.innerHeight *
+    0.38;
+
+
+  smoothX =
+    Math.max(
+      -maxX,
+      Math.min(
+        maxX,
+        smoothX
+      )
+    );
+
+
+  smoothY =
+    Math.max(
+      -maxY,
+      Math.min(
+        maxY,
+        smoothY
+      )
+    );
+
+
+  target.style.transform =
+    `translate(${smoothX}px, ${smoothY}px)`;
+}
+
+
+/* =========================================================
+   FPS COUNTER
+   ========================================================= */
+
+setInterval(
+  () => {
+
+    const now =
+      performance.now();
+
+
+    const elapsed =
+      now -
+      lastFPSCheck;
+
+
+    fpsElement.textContent =
+      Math.round(
+        fpsEvents *
+        1000 /
+        elapsed
+      );
+
+
+    fpsEvents =
+      0;
+
+
+    lastFPSCheck =
+      now;
+
+  },
+  1000
+);
+
+
+/* =========================================================
+   ENABLE SENSOR
+   ========================================================= */
+
+async function enableMotion() {
+
+  message.textContent =
+    "Requesting motion sensor...";
+
+
+  try {
+
+    /*
+       iOS-style permission API.
+
+       Other browsers may not require this.
+    */
+
+    if (
+      typeof DeviceOrientationEvent !==
+      "undefined" &&
+      typeof DeviceOrientationEvent
+        .requestPermission ===
+      "function"
+    ) {
+
+      const permission =
+        await DeviceOrientationEvent
+          .requestPermission();
+
+
+      if (
+        permission !==
+        "granted"
+      ) {
+
+        throw new Error(
+          "Motion permission denied."
+        );
+      }
+    }
+
+
+    window.addEventListener(
+      "deviceorientation",
+      handleOrientation,
+      true
+    );
+
+
+    startScreen.style.display =
+      "none";
+
+
+    statusElement.textContent =
+      "LISTENING...";
+
+
+    /*
+       If nothing arrives after three seconds,
+       report it clearly.
+    */
+
+    setTimeout(
+      () => {
+
+        if (
+          eventCount === 0
+        ) {
+
+          statusElement.textContent =
+            "NO SENSOR EVENTS";
+
+          statusElement.style.color =
+            "#ff3b4f";
+
+          statusElement.style.borderColor =
+            "#ff3b4f";
+        }
+
+      },
+      3000
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+
+    message.textContent =
+      "ERROR: " +
+      error.message;
+  }
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+document
+  .getElementById(
+    "startButton"
+  )
+  .addEventListener(
+    "click",
+    enableMotion
+  );
+
+</script>
+
+</body>
+</html>
