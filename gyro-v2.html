@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,user-scalable=no"
+>
+
+<title>CHILI // Motion V2</title>
+
+<style>
+
+:root {
+  --green:#00ff88;
+  --green2:#72ffb7;
+  --cyan:#38dfff;
+  --yellow:#ffd84a;
+  --red:#ff4055;
+  --bg:#020806;
+  --panel:rgba(0,18,11,.78);
+  --line:rgba(0,255,136,.35);
+  --muted:#6fa88b;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+html,
+body {
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+
+  background:var(--bg);
+  color:var(--green);
+
+  font-family:
+    Consolas,
+    Monaco,
+    monospace;
+
+  touch-action:none;
+}
+
+
+/* =====================================================
+   BACKGROUND
+   ===================================================== */
+
+.grid {
+  position:fixed;
+  inset:0;
+
+  background-image:
+    linear-gradient(
+      rgba(0,255,136,.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,255,136,.055) 1px,
+      transparent 1px
+    );
+
+  background-size:40px 40px;
+
+  pointer-events:none;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header {
+  position:fixed;
+
+  top:15px;
+  left:18px;
+
+  z-index:20;
+}
+
+.title {
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.subtitle {
+  margin-top:4px;
+
+  font-size:9px;
+  color:var(--muted);
+
+  letter-spacing:2px;
+}
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+#status {
+  position:fixed;
+
+  right:18px;
+  top:16px;
+
+  padding:7px 10px;
+
+  border:1px solid var(--yellow);
+
+  color:var(--yellow);
+
+  font-size:9px;
+
+  background:var(--panel);
+
+  z-index:30;
+}
+
+
+/* =====================================================
+   CENTER RETICLE
+   ===================================================== */
+
+#reticle {
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  width:80px;
+  height:80px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border:
+    1px solid
+    rgba(0,255,136,.75);
+
+  border-radius:50%;
+
+  box-shadow:
+    0 0 20px
+    rgba(0,255,136,.18);
+
+  pointer-events:none;
+}
+
+#reticle::before,
+#reticle::after {
+
+  content:"";
+
+  position:absolute;
+
+  background:
+    rgba(0,255,136,.7);
+}
+
+#reticle::before {
+
+  width:120px;
+  height:1px;
+
+  left:-21px;
+  top:39px;
+}
+
+#reticle::after {
+
+  height:120px;
+  width:1px;
+
+  top:-21px;
+  left:39px;
+}
+
+
+/* CENTER DOT */
+
+.center-dot {
+
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  width:5px;
+  height:5px;
+
+  transform:
+    translate(-50%,-50%);
+
+  background:var(--green);
+
+  border-radius:50%;
+
+  box-shadow:
+    0 0 10px var(--green);
+}
+
+
+/* =====================================================
+   HEAD TARGET
+   ===================================================== */
+
+#target {
+
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  width:22px;
+  height:22px;
+
+  margin-left:-11px;
+  margin-top:-11px;
+
+  border:
+    2px solid
+    var(--cyan);
+
+  border-radius:50%;
+
+  box-shadow:
+    0 0 16px
+    rgba(56,223,255,.8);
+
+  pointer-events:none;
+
+  will-change:transform;
+}
+
+#target::after {
+
+  content:"";
+
+  position:absolute;
+
+  width:4px;
+  height:4px;
+
+  left:7px;
+  top:7px;
+
+  background:var(--cyan);
+
+  border-radius:50%;
+}
+
+
+/* =====================================================
+   DIRECTION INDICATORS
+   ===================================================== */
+
+.direction {
+
+  position:fixed;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:2px;
+
+  opacity:.35;
+}
+
+#dirLeft {
+
+  left:12px;
+  top:50%;
+
+  transform:
+    translateY(-50%);
+}
+
+#dirRight {
+
+  right:12px;
+  top:50%;
+
+  transform:
+    translateY(-50%);
+}
+
+#dirUp {
+
+  top:68px;
+  left:50%;
+
+  transform:
+    translateX(-50%);
+}
+
+#dirDown {
+
+  bottom:75px;
+  left:50%;
+
+  transform:
+    translateX(-50%);
+}
+
+.direction.active {
+
+  opacity:1;
+
+  color:var(--cyan);
+
+  text-shadow:
+    0 0 8px var(--cyan);
+}
+
+
+/* =====================================================
+   SENSOR PANEL
+   ===================================================== */
+
+.sensor-panel {
+
+  position:fixed;
+
+  left:15px;
+  bottom:70px;
+
+  width:235px;
+
+  padding:10px;
+
+  border:
+    1px solid
+    var(--line);
+
+  background:var(--panel);
+
+  z-index:20;
+}
+
+.panel-title {
+
+  margin-bottom:7px;
+
+  color:var(--green);
+
+  font-size:9px;
+
+  letter-spacing:2px;
+}
+
+.row {
+
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  margin:5px 0;
+
+  font-size:10px;
+}
+
+.label {
+  color:var(--muted);
+}
+
+.value {
+
+  color:var(--green2);
+
+  font-weight:bold;
+}
+
+
+/* =====================================================
+   ANGLE HUD
+   ===================================================== */
+
+.angle-panel {
+
+  position:fixed;
+
+  right:15px;
+  bottom:70px;
+
+  width:190px;
+
+  padding:10px;
+
+  border:
+    1px solid
+    rgba(56,223,255,.3);
+
+  background:var(--panel);
+
+  z-index:20;
+}
+
+.relative {
+
+  color:var(--cyan);
+}
+
+
+/* =====================================================
+   BOTTOM BUTTONS
+   ===================================================== */
+
+.controls {
+
+  position:fixed;
+
+  bottom:12px;
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  display:flex;
+
+  gap:7px;
+
+  z-index:50;
+}
+
+button {
+
+  padding:9px 14px;
+
+  border:
+    1px solid
+    var(--green);
+
+  background:
+    rgba(0,255,136,.08);
+
+  color:var(--green);
+
+  font-family:inherit;
+
+  font-size:10px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+button:active {
+
+  background:var(--green);
+
+  color:#00140a;
+}
+
+
+/* =====================================================
+   CALIBRATION MESSAGE
+   ===================================================== */
+
+#calibrationMessage {
+
+  position:fixed;
+
+  left:50%;
+  top:calc(50% + 65px);
+
+  transform:
+    translateX(-50%);
+
+  color:var(--muted);
+
+  font-size:9px;
+
+  letter-spacing:1px;
+
+  white-space:nowrap;
+}
+
+
+/* =====================================================
+   START SCREEN
+   ===================================================== */
+
+#start {
+
+  position:fixed;
+
+  z-index:1000;
+
+  inset:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:
+    radial-gradient(
+      circle,
+      #07301f,
+      #020806 68%
+    );
+}
+
+.start-logo {
+
+  font-size:38px;
+
+  font-weight:900;
+
+  letter-spacing:5px;
+
+  text-shadow:
+    0 0 20px
+    rgba(0,255,136,.4);
+}
+
+.start-sub {
+
+  margin-top:7px;
+
+  margin-bottom:25px;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:3px;
+}
+
+#startMessage {
+
+  margin-top:15px;
+
+  color:var(--muted);
+
+  font-size:9px;
+
+  max-width:330px;
+
+  text-align:center;
+
+  line-height:1.6;
+}
+
+
+/* =====================================================
+   SMALL DISPLAY
+   ===================================================== */
+
+@media(max-width:600px) {
+
+  .sensor-panel {
+
+    width:175px;
+
+    padding:7px;
+  }
+
+  .angle-panel {
+
+    width:145px;
+
+    padding:7px;
+  }
+
+  .row {
+
+    font-size:8px;
+  }
+
+  .panel-title {
+
+    font-size:8px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="grid"></div>
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+  <div class="title">
+    CHILI MOTION
+  </div>
+
+  <div class="subtitle">
+    HEAD TRACKING // V2
+  </div>
+
+</div>
+
+
+<div id="status">
+  SENSOR WAITING
+</div>
+
+
+<!-- CENTER -->
+
+<div id="reticle"></div>
+
+<div class="center-dot"></div>
+
+<div id="target"></div>
+
+
+<div id="calibrationMessage">
+  CENTER = CALIBRATED VIEW
+</div>
+
+
+<!-- DIRECTIONS -->
+
+<div
+  id="dirLeft"
+  class="direction"
+>
+  ◀ LEFT
+</div>
+
+<div
+  id="dirRight"
+  class="direction"
+>
+  RIGHT ▶
+</div>
+
+<div
+  id="dirUp"
+  class="direction"
+>
+  ▲ UP
+</div>
+
+<div
+  id="dirDown"
+  class="direction"
+>
+  ▼ DOWN
+</div>
+
+
+<!-- RAW SENSOR -->
+
+<div class="sensor-panel">
+
+  <div class="panel-title">
+    RAW SENSOR
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      ALPHA
+    </span>
+
+    <span
+      id="rawAlpha"
+      class="value"
+    >
+      --
+    </span>
+
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      BETA
+    </span>
+
+    <span
+      id="rawBeta"
+      class="value"
+    >
+      --
+    </span>
+
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      GAMMA
+    </span>
+
+    <span
+      id="rawGamma"
+      class="value"
+    >
+      --
+    </span>
+
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      EVENTS
+    </span>
+
+    <span
+      id="eventCount"
+      class="value"
+    >
+      0
+    </span>
+
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      SENSOR FPS
+    </span>
+
+    <span
+      id="sensorFPS"
+      class="value"
+    >
+      0
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- RELATIVE SENSOR -->
+
+<div class="angle-panel">
+
+  <div class="panel-title">
+    CALIBRATED
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      YAW
+    </span>
+
+    <span
+      id="yaw"
+      class="value relative"
+    >
+      0.0°
+    </span>
+
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      PITCH
+    </span>
+
+    <span
+      id="pitch"
+      class="value relative"
+    >
+      0.0°
+    </span>
+
+  </div>
+
+
+  <div class="row">
+
+    <span class="label">
+      ROLL
+    </span>
+
+    <span
+      id="roll"
+      class="value relative"
+    >
+      0.0°
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- CONTROLS -->
+
+<div class="controls">
+
+  <button id="recenterButton">
+    RECENTER
+  </button>
+
+  <button id="zeroRollButton">
+    ZERO ROLL
+  </button>
+
+</div>
+
+
+<!-- START -->
+
+<div id="start">
+
+  <div class="start-logo">
+    CHILI
+  </div>
+
+  <div class="start-sub">
+    MOTION SYSTEM V2
+  </div>
+
+  <button id="enableButton">
+    ENABLE HEAD TRACKING
+  </button>
+
+  <div id="startMessage">
+
+    Look straight ahead when enabling.
+    That direction becomes Chili's initial center.
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+/* ==========================================================
+   CHILI MOTION V2
+
+   Known-good concept:
+
+   Ray-Ban Display
+         ↓
+   DeviceOrientation
+         ↓
+   Chili JavaScript
+         ↓
+   Head-tracked HUD
+
+
+   PURPOSE OF V2:
+
+   1. Preserve raw orientation values.
+   2. Establish calibration center.
+   3. Calculate relative movement.
+   4. Smooth HUD movement.
+   5. Support RECENTER.
+   6. Measure sensor event rate.
+   ========================================================== */
+
+
+/* ==========================================================
+   DOM
+   ========================================================== */
+
+const rawAlphaEl =
+  document.getElementById(
+    "rawAlpha"
+  );
+
+const rawBetaEl =
+  document.getElementById(
+    "rawBeta"
+  );
+
+const rawGammaEl =
+  document.getElementById(
+    "rawGamma"
+  );
+
+const yawEl =
+  document.getElementById(
+    "yaw"
+  );
+
+const pitchEl =
+  document.getElementById(
+    "pitch"
+  );
+
+const rollEl =
+  document.getElementById(
+    "roll"
+  );
+
+const eventCountEl =
+  document.getElementById(
+    "eventCount"
+  );
+
+const sensorFPSEl =
+  document.getElementById(
+    "sensorFPS"
+  );
+
+const statusEl =
+  document.getElementById(
+    "status"
+  );
+
+const target =
+  document.getElementById(
+    "target"
+  );
+
+const startScreen =
+  document.getElementById(
+    "start"
+  );
+
+const startMessage =
+  document.getElementById(
+    "startMessage"
+  );
+
+
+/* ==========================================================
+   STATE
+   ========================================================== */
+
+const state = {
+
+  enabled:false,
+
+  receivedSensor:false,
+
+  events:0,
+
+  fpsEvents:0,
+
+  lastFPS:
+    performance.now(),
+
+  rawAlpha:null,
+
+  rawBeta:null,
+
+  rawGamma:null,
+
+  centerAlpha:null,
+
+  centerBeta:null,
+
+  centerGamma:null,
+
+  yaw:0,
+
+  pitch:0,
+
+  roll:0,
+
+  targetX:0,
+
+  targetY:0,
+
+  smoothX:0,
+
+  smoothY:0
+
+};
+
+
+/* ==========================================================
+   ANGLE HELPERS
+   ========================================================== */
+
+function normalizeAngle(
+  angle
+) {
+
+  while(
+    angle > 180
+  ) {
+
+    angle -= 360;
+  }
+
+
+  while(
+    angle < -180
+  ) {
+
+    angle += 360;
+  }
+
+
+  return angle;
+}
+
+
+function difference(
+  value,
+  baseline
+) {
+
+  if(
+    value == null ||
+    baseline == null
+  ) {
+
+    return 0;
+  }
+
+
+  return normalizeAngle(
+    value - baseline
+  );
+}
+
+
+/* ==========================================================
+   CALIBRATION
+   ========================================================== */
+
+function recenter() {
+
+  if(
+    state.rawAlpha == null &&
+    state.rawBeta == null &&
+    state.rawGamma == null
+  ) {
+
+    return;
+  }
+
+
+  state.centerAlpha =
+    state.rawAlpha || 0;
+
+  state.centerBeta =
+    state.rawBeta || 0;
+
+  state.centerGamma =
+    state.rawGamma || 0;
+
+
+  state.yaw = 0;
+
+  state.pitch = 0;
+
+  state.roll = 0;
+
+
+  state.targetX = 0;
+
+  state.targetY = 0;
+
+  state.smoothX = 0;
+
+  state.smoothY = 0;
+
+
+  statusEl.textContent =
+    "RECENTERED";
+
+
+  setTimeout(
+    () => {
+
+      if(
+        state.receivedSensor
+      ) {
+
+        statusEl.textContent =
+          "HEAD TRACKING ONLINE";
+      }
+
+    },
+    800
+  );
+}
+
+
+/* ==========================================================
+   ZERO ROLL ONLY
+   ========================================================== */
+
+function zeroRoll() {
+
+  if(
+    state.rawGamma == null
+  ) {
+
+    return;
+  }
+
+
+  state.centerGamma =
+    state.rawGamma;
+
+
+  statusEl.textContent =
+    "ROLL ZEROED";
+}
+
+
+/* ==========================================================
+   DEVICE ORIENTATION
+   ========================================================== */
+
+function handleOrientation(
+  event
+) {
+
+  state.events++;
+
+  state.fpsEvents++;
+
+
+  state.rawAlpha =
+    event.alpha;
+
+  state.rawBeta =
+    event.beta;
+
+  state.rawGamma =
+    event.gamma;
+
+
+  rawAlphaEl.textContent =
+    event.alpha == null
+      ? "NULL"
+      : event.alpha.toFixed(2);
+
+
+  rawBetaEl.textContent =
+    event.beta == null
+      ? "NULL"
+      : event.beta.toFixed(2);
+
+
+  rawGammaEl.textContent =
+    event.gamma == null
+      ? "NULL"
+      : event.gamma.toFixed(2);
+
+
+  eventCountEl.textContent =
+    state.events;
+
+
+  /*
+     Event exists but contains no sensor data.
+  */
+
+  if(
+    event.alpha == null &&
+    event.beta == null &&
+    event.gamma == null
+  ) {
+
+    statusEl.textContent =
+      "EVENT / NO VALUES";
+
+    statusEl.style.color =
+      "#ffd84a";
+
+    statusEl.style.borderColor =
+      "#ffd84a";
+
+    return;
+  }
+
+
+  /*
+     FIRST VALID SENSOR EVENT
+  */
+
+  if(
+    !state.receivedSensor
+  ) {
+
+    state.receivedSensor =
+      true;
+
+
+    state.centerAlpha =
+      event.alpha || 0;
+
+    state.centerBeta =
+      event.beta || 0;
+
+    state.centerGamma =
+      event.gamma || 0;
+
+
+    statusEl.textContent =
+      "HEAD TRACKING ONLINE";
+
+
+    statusEl.style.color =
+      "#00ff88";
+
+
+    statusEl.style.borderColor =
+      "#00ff88";
+  }
+
+
+  /*
+     CALCULATE RELATIVE ORIENTATION
+
+     We are initially treating:
+
+     alpha → yaw
+     beta  → pitch
+     gamma → roll
+
+     The Ray-Ban test will tell us whether these
+     axes need to be remapped or inverted.
+  */
+
+  state.yaw =
+    difference(
+      event.alpha,
+      state.centerAlpha
+    );
+
+
+  state.pitch =
+    difference(
+      event.beta,
+      state.centerBeta
+    );
+
+
+  state.roll =
+    difference(
+      event.gamma,
+      state.centerGamma
+    );
+
+
+  yawEl.textContent =
+    state.yaw.toFixed(1) +
+    "°";
+
+
+  pitchEl.textContent =
+    state.pitch.toFixed(1) +
+    "°";
+
+
+  rollEl.textContent =
+    state.roll.toFixed(1) +
+    "°";
+
+
+  /*
+     Convert head angle into screen displacement.
+
+     This is intentionally adjustable.
+  */
+
+  const horizontalSensitivity =
+    8;
+
+
+  const verticalSensitivity =
+    8;
+
+
+  state.targetX =
+    state.yaw *
+    horizontalSensitivity;
+
+
+  state.targetY =
+    state.pitch *
+    verticalSensitivity;
+
+
+  /*
+     Prevent marker leaving display.
+  */
+
+  const maxX =
+    window.innerWidth *
+    .43;
+
+
+  const maxY =
+    window.innerHeight *
+    .38;
+
+
+  state.targetX =
+    Math.max(
+      -maxX,
+      Math.min(
+        maxX,
+        state.targetX
+      )
+    );
+
+
+  state.targetY =
+    Math.max(
+      -maxY,
+      Math.min(
+        maxY,
+        state.targetY
+      )
+    );
+
+
+  updateDirections();
+
+}
+
+
+/* ==========================================================
+   DIRECTION INDICATORS
+   ========================================================== */
+
+function updateDirections() {
+
+  const threshold =
+    5;
+
+
+  const left =
+    document.getElementById(
+      "dirLeft"
+    );
+
+
+  const right =
+    document.getElementById(
+      "dirRight"
+    );
+
+
+  const up =
+    document.getElementById(
+      "dirUp"
+    );
+
+
+  const down =
+    document.getElementById(
+      "dirDown"
+    );
+
+
+  left.classList.toggle(
+    "active",
+    state.yaw < -threshold
+  );
+
+
+  right.classList.toggle(
+    "active",
+    state.yaw > threshold
+  );
+
+
+  up.classList.toggle(
+    "active",
+    state.pitch < -threshold
+  );
+
+
+  down.classList.toggle(
+    "active",
+    state.pitch > threshold
+  );
+
+}
+
+
+/* ==========================================================
+   SMOOTH RENDER LOOP
+   ========================================================== */
+
+function render() {
+
+  /*
+     Low-pass interpolation.
+
+     Sensor updates and rendering are intentionally
+     separated.
+  */
+
+  const smoothing =
+    .16;
+
+
+  state.smoothX +=
+    (
+      state.targetX -
+      state.smoothX
+    ) *
+    smoothing;
+
+
+  state.smoothY +=
+    (
+      state.targetY -
+      state.smoothY
+    ) *
+    smoothing;
+
+
+  target.style.transform =
+    `translate(
+      ${state.smoothX}px,
+      ${state.smoothY}px
+    )`;
+
+
+  requestAnimationFrame(
+    render
+  );
+}
+
+
+requestAnimationFrame(
+  render
+);
+
+
+/* ==========================================================
+   SENSOR FPS
+   ========================================================== */
+
+setInterval(
+  () => {
+
+    const now =
+      performance.now();
+
+
+    const elapsed =
+      now -
+      state.lastFPS;
+
+
+    const fps =
+      Math.round(
+        state.fpsEvents *
+        1000 /
+        elapsed
+      );
+
+
+    sensorFPSEl.textContent =
+      fps;
+
+
+    state.fpsEvents =
+      0;
+
+
+    state.lastFPS =
+      now;
+
+  },
+  1000
+);
+
+
+/* ==========================================================
+   ENABLE
+   ========================================================== */
+
+async function enableSensors() {
+
+  startMessage.textContent =
+    "REQUESTING SENSOR ACCESS...";
+
+
+  try {
+
+
+    /*
+       Permission method required on platforms
+       that expose requestPermission().
+    */
+
+    if(
+      typeof DeviceOrientationEvent !==
+        "undefined" &&
+
+      typeof DeviceOrientationEvent
+        .requestPermission ===
+        "function"
+    ) {
+
+      const permission =
+        await DeviceOrientationEvent
+          .requestPermission();
+
+
+      if(
+        permission !==
+        "granted"
+      ) {
+
+        throw new Error(
+          "Sensor permission denied."
+        );
+      }
+    }
+
+
+    window.addEventListener(
+      "deviceorientation",
+      handleOrientation,
+      true
+    );
+
+
+    state.enabled =
+      true;
+
+
+    startScreen.style.display =
+      "none";
+
+
+    statusEl.textContent =
+      "WAITING FOR DATA";
+
+
+    /*
+       Diagnose missing events.
+    */
+
+    setTimeout(
+      () => {
+
+        if(
+          state.events === 0
+        ) {
+
+          statusEl.textContent =
+            "NO SENSOR EVENTS";
+
+
+          statusEl.style.color =
+            "#ff4055";
+
+
+          statusEl.style.borderColor =
+            "#ff4055";
+        }
+
+      },
+      3000
+    );
+
+  }
+
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+
+    startMessage.textContent =
+      "ERROR: " +
+      error.message;
+  }
+
+}
+
+
+/* ==========================================================
+   CONTROLS
+   ========================================================== */
+
+document
+  .getElementById(
+    "enableButton"
+  )
+  .addEventListener(
+    "click",
+    enableSensors
+  );
+
+
+document
+  .getElementById(
+    "recenterButton"
+  )
+  .addEventListener(
+    "click",
+    recenter
+  );
+
+
+document
+  .getElementById(
+    "zeroRollButton"
+  )
+  .addEventListener(
+    "click",
+    zeroRoll
+  );
+
+
+/* ==========================================================
+   END CHILI MOTION V2
+   ========================================================== */
+
+</script>
+
+</body>
+</html>
