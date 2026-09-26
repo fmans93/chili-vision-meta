@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,user-scalable=no"
+>
+
+<title>CHILI VISION // Glasses HUD</title>
+
+<style>
+
+* {
+  box-sizing:border-box;
+}
+
+html,
+body {
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+
+  background:#020806;
+  color:#00ff88;
+
+  font-family:Consolas,Monaco,monospace;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.grid {
+  position:fixed;
+  inset:0;
+
+  background-image:
+    linear-gradient(
+      rgba(0,255,136,.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,255,136,.055) 1px,
+      transparent 1px
+    );
+
+  background-size:40px 40px;
+
+  pointer-events:none;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  position:fixed;
+  top:14px;
+  left:18px;
+}
+
+.title {
+  font-size:17px;
+  font-weight:bold;
+  letter-spacing:3px;
+}
+
+.subtitle {
+  margin-top:3px;
+  font-size:9px;
+  color:#67a98a;
+  letter-spacing:2px;
+}
+
+#status {
+  position:fixed;
+
+  top:15px;
+  right:18px;
+
+  padding:6px 10px;
+
+  border:1px solid #00ff88;
+
+  font-size:9px;
+}
+
+
+/* =========================
+   CENTER RETICLE
+========================= */
+
+#reticle {
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  width:70px;
+  height:70px;
+
+  margin-left:-35px;
+  margin-top:-35px;
+
+  border:1px solid rgba(0,255,136,.75);
+  border-radius:50%;
+
+  pointer-events:none;
+}
+
+#reticle::before,
+#reticle::after {
+  content:"";
+  position:absolute;
+  background:#00ff88;
+}
+
+#reticle::before {
+  width:100px;
+  height:1px;
+  left:-16px;
+  top:34px;
+}
+
+#reticle::after {
+  height:100px;
+  width:1px;
+  top:-16px;
+  left:34px;
+}
+
+
+/* =========================
+   HEAD POINTER
+========================= */
+
+#pointer {
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  width:22px;
+  height:22px;
+
+  margin-left:-11px;
+  margin-top:-11px;
+
+  border:2px solid #38dfff;
+  border-radius:50%;
+
+  box-shadow:
+    0 0 15px #38dfff;
+
+  z-index:100;
+
+  pointer-events:none;
+}
+
+#pointer::after {
+  content:"";
+
+  position:absolute;
+
+  width:4px;
+  height:4px;
+
+  left:7px;
+  top:7px;
+
+  background:#38dfff;
+
+  border-radius:50%;
+}
+
+
+/* =========================
+   HUD BUTTONS
+========================= */
+
+.hud-button {
+  position:fixed;
+
+  width:115px;
+  height:48px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:1px solid rgba(0,255,136,.65);
+
+  background:
+    rgba(0,20,12,.72);
+
+  color:#00ff88;
+
+  font-size:11px;
+  font-weight:bold;
+
+  letter-spacing:1px;
+
+  transition:
+    transform .15s,
+    box-shadow .15s,
+    background .15s;
+}
+
+.hud-button.targeted {
+  border-color:#38dfff;
+  color:#38dfff;
+
+  box-shadow:
+    0 0 18px rgba(56,223,255,.6);
+
+  transform:scale(1.08);
+}
+
+.hud-button.activated {
+  background:#00ff88;
+  color:#00140a;
+}
+
+
+/* POSITIONS */
+
+#scan {
+  left:50%;
+  top:15%;
+
+  transform:
+    translateX(-50%);
+}
+
+#menu {
+  left:5%;
+  top:46%;
+}
+
+#system {
+  right:5%;
+  top:46%;
+}
+
+#chiliAI {
+  left:50%;
+  bottom:13%;
+
+  transform:
+    translateX(-50%);
+}
+
+
+/* =========================
+   DWELL BAR
+========================= */
+
+.progress {
+  position:absolute;
+
+  left:4px;
+  right:4px;
+  bottom:3px;
+
+  height:3px;
+
+  background:
+    rgba(255,255,255,.1);
+}
+
+.progress-fill {
+  width:0%;
+  height:100%;
+
+  background:#38dfff;
+}
+
+
+/* =========================
+   TELEMETRY
+========================= */
+
+.telemetry {
+  position:fixed;
+
+  left:16px;
+  bottom:15px;
+
+  font-size:8px;
+  color:#6ba589;
+
+  line-height:1.6;
+}
+
+.telemetry strong {
+  color:#00ff88;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+#messageBox {
+  position:fixed;
+
+  left:50%;
+  top:67%;
+
+  transform:
+    translate(-50%,-50%);
+
+  min-width:230px;
+
+  padding:10px 14px;
+
+  border:
+    1px solid rgba(56,223,255,.4);
+
+  background:
+    rgba(0,15,10,.9);
+
+  color:#38dfff;
+
+  font-size:10px;
+
+  text-align:center;
+
+  opacity:0;
+
+  transition:opacity .2s;
+
+  pointer-events:none;
+}
+
+#messageBox.show {
+  opacity:1;
+}
+
+
+/* =========================
+   RECENTER
+========================= */
+
+#recenter {
+  position:fixed;
+
+  right:15px;
+  bottom:15px;
+
+  padding:8px 11px;
+
+  border:1px solid #38dfff;
+
+  background:
+    rgba(56,223,255,.08);
+
+  color:#38dfff;
+
+  font-family:inherit;
+
+  font-size:9px;
+
+  z-index:200;
+}
+
+
+/* =========================
+   START
+========================= */
+
+#start {
+  position:fixed;
+  inset:0;
+
+  z-index:1000;
+
+  display:flex;
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  background:#020806;
+}
+
+.start-title {
+  font-size:34px;
+  font-weight:bold;
+  letter-spacing:5px;
+}
+
+.start-sub {
+  margin-top:5px;
+  margin-bottom:24px;
+
+  color:#6ba589;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+}
+
+#enable {
+  padding:13px 23px;
+
+  border:1px solid #00ff88;
+
+  background:
+    rgba(0,255,136,.08);
+
+  color:#00ff88;
+
+  font-family:inherit;
+
+  font-weight:bold;
+}
+
+#startMessage {
+  margin-top:14px;
+
+  color:#6ba589;
+
+  font-size:9px;
+
+  max-width:300px;
+
+  text-align:center;
+}
+
+</style>
+</head>
+
+<div id="scannerLayer"></div>
+
+<script type="module">
+import { ChiliScanner } from "./js/glasses-scanner.js";
+
+const scanner = new ChiliScanner();
+
+window.addEventListener("chili:select", (event) => {
+  if (event.detail.action === "scan") {
+    scanner.toggle();
+  }
+});
+
+window.chiliScanner = scanner;
+</script>
+
+<style>
+#scannerLayer {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:40;
+}
+
+.detection-box {
+  position:absolute;
+  border:2px solid #00ff88;
+  box-shadow:0 0 12px rgba(0,255,136,.5);
+}
+
+.detection-label {
+  position:absolute;
+  left:-2px;
+  top:-20px;
+
+  padding:3px 6px;
+
+  background:#00ff88;
+  color:#00140a;
+
+  font-size:9px;
+  font-weight:bold;
+}
+
+.scan-active #reticle {
+  box-shadow:
+    0 0 25px rgba(0,255,136,.8);
+}
+#scanSweep {
+  position:absolute;
+
+  left:0;
+  top:0;
+
+  width:100%;
+  height:2px;
+
+  background:#00ff88;
+
+  box-shadow:
+    0 0 8px #00ff88,
+    0 0 18px rgba(0,255,136,.8);
+
+  display:none;
+}
+
+
+.scan-active #scanSweep {
+  display:block;
+}
+
+
+#scanReadout {
+  position:fixed;
+
+  right:18px;
+  top:60px;
+
+  padding:8px 10px;
+
+  border-left:
+    1px solid #00ff88;
+
+  background:
+    rgba(0,12,8,.72);
+
+  color:#6ba589;
+
+  font-size:8px;
+
+  line-height:1.7;
+
+  letter-spacing:1px;
+}
+
+
+#scanReadout strong {
+  color:#00ff88;
+}
+
+
+.detection-box {
+  position:absolute;
+
+  border:
+    1px solid #00ff88;
+
+  box-shadow:
+    inset 0 0 10px
+    rgba(0,255,136,.12);
+
+  pointer-events:none;
+}
+
+
+.detection-label {
+  position:absolute;
+
+  left:-1px;
+  top:-19px;
+
+  white-space:nowrap;
+
+  padding:3px 5px;
+
+  background:#00ff88;
+
+  color:#00140a;
+
+  font-size:8px;
+
+  font-weight:bold;
+}
+
+
+.track-dot {
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:5px;
+  height:5px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:#38dfff;
+
+  box-shadow:
+    0 0 8px #38dfff;
+}
+</style>
+<div id="chiliMenu">
+
+  <div
+    class="menu-option"
+    data-chili-target="scan"
+  >
+    SCAN
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+  <div
+    class="menu-option"
+    data-chili-target="objects"
+  >
+    OBJECTS
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+  <div
+    class="menu-option"
+    data-chili-target="ai"
+  >
+    CHILI AI
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+  <div
+    class="menu-option"
+    data-chili-target="system"
+  >
+    SYSTEM
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+</div>
+
+<style>
+
+#chiliMenu {
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  transform:
+    translate(-50%,-50%);
+
+  width:330px;
+  height:230px;
+
+  display:none;
+
+  pointer-events:none;
+
+  z-index:60;
+}
+
+#chiliMenu.open {
+  display:block;
+}
+
+.menu-option {
+  position:absolute;
+
+  width:100px;
+
+  padding:12px;
+
+  text-align:center;
+
+  border:
+    1px solid #00ff88;
+
+  background:
+    rgba(0,20,12,.9);
+
+  color:#00ff88;
+
+  font-size:10px;
+}
+
+.menu-option:nth-child(1) {
+  left:115px;
+  top:0;
+}
+
+.menu-option:nth-child(2) {
+  left:0;
+  top:90px;
+}
+
+.menu-option:nth-child(3) {
+  right:0;
+  top:90px;
+}
+
+.menu-option:nth-child(4) {
+  left:115px;
+  bottom:0;
+}
+
+.chili-targeted {
+  border-color:#38dfff !important;
+
+  color:#38dfff !important;
+
+  box-shadow:
+    0 0 15px #38dfff;
+}
+
+.chili-dwell-fill {
+  position:absolute;
+
+  left:0;
+  bottom:0;
+
+  width:0%;
+  height:3px;
+
+  background:#38dfff;
+}
+
+</style>
+<div id="assistantPanel">
+
+  <div class="assistant-title">
+    🌶 CHILI
+  </div>
+
+  <div id="assistantMessage">
+    SYSTEM READY
+  </div>
+
+</div>
+
+<style>
+
+#assistantPanel {
+  position:fixed;
+
+  left:50%;
+  bottom:18%;
+
+  transform:
+    translateX(-50%)
+    translateY(20px);
+
+  min-width:250px;
+
+  padding:12px 16px;
+
+  border:
+    1px solid #38dfff;
+
+  background:
+    rgba(0,15,10,.92);
+
+  color:#38dfff;
+
+  opacity:0;
+
+  transition:
+    opacity .2s,
+    transform .2s;
+
+  z-index:80;
+
+  pointer-events:none;
+}
+
+#assistantPanel.show {
+  opacity:1;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
+}
+
+.assistant-title {
+  color:#00ff88;
+
+  font-size:10px;
+
+  font-weight:bold;
+
+  margin-bottom:6px;
+}
+
+#assistantMessage {
+  font-size:11px;
+}
+
+</style>
+<div id="worldLayer">
+
+  <div id="worldMarker">
+    ◇
+  </div>
+
+</div>
+
+<style>
+
+#worldLayer {
+  position:fixed;
+
+  inset:0;
+
+  pointer-events:none;
+
+  z-index:30;
+}
+
+#worldMarker {
+  position:absolute;
+
+  left:50%;
+  top:35%;
+
+  transform:
+    translate(-50%,-50%);
+
+  color:#ffd84a;
+
+  font-size:40px;
+
+  text-shadow:
+    0 0 15px #ffd84a;
+}
+
+</style>
+<script type="module">
+
+import {
+  ChiliGlassesEngine
+} from "./js/glasses-engine.js";
+
+import {
+  ChiliScanner
+} from "./js/glasses-scanner.js";
+
+import {
+  ChiliMenu
+} from "./js/glasses-menu.js";
+
+import {
+  ChiliAssistant
+} from "./js/glasses-assistant.js";
+
+import {
+  ChiliWorld
+} from "./js/glasses-world.js";
+
+
+/* =============================
+   SYSTEMS
+============================= */
+
+const engine =
+  new ChiliGlassesEngine({
+    pointer:"#pointer",
+    status:"#status",
+    fps:"#sensorFPS",
+
+    sensitivityX:7,
+
+    // Corrected from our Ray-Ban test.
+    sensitivityY:-7,
+
+    smoothing:.15,
+
+    dwellRequired:1000
+  });
+
+
+const scanner =
+  new ChiliScanner();
+
+
+const menu =
+  new ChiliMenu();
+
+
+const assistant =
+  new ChiliAssistant();
+
+
+const world =
+  new ChiliWorld();
+
+
+/* =============================
+   START MOTION
+
+   IMPORTANT:
+   Sensor permission must remain
+   behind a physical user click.
+============================= */
+
+const enableButton =
+  document.querySelector(
+    "#enable"
+  );
+
+
+if (enableButton) {
+
+  /*
+    Replace the old button with a clone
+    so the legacy listener in the copied
+    standalone page does not also run.
+  */
+
+  const cleanButton =
+    enableButton.cloneNode(true);
+
+
+  enableButton.replaceWith(
+    cleanButton
+  );
+
+
+  cleanButton.addEventListener(
+    "click",
+    async () => {
+
+      const success =
+        await engine.enable();
+
+
+      if (success) {
+
+        const start =
+          document.querySelector(
+            "#start"
+          );
+
+
+        if (start) {
+
+          start.style.display =
+            "none";
+        }
+
+
+        assistant.say(
+          "CHILI VISION ONLINE"
+        );
+      }
+    }
+  );
+}
+
+
+/* =============================
+   RECENTER
+============================= */
+
+const recenterButton =
+  document.querySelector(
+    "#recenter"
+  );
+
+
+if (recenterButton) {
+
+  const cleanRecenter =
+    recenterButton.cloneNode(true);
+
+
+  recenterButton.replaceWith(
+    cleanRecenter
+  );
+
+
+  cleanRecenter.addEventListener(
+    "click",
+    () => {
+
+      engine.recenter();
+
+
+      assistant.say(
+        "VIEW RECENTERED"
+      );
+    }
+  );
+}
+
+
+/* =============================
+   HEAD SELECTION
+============================= */
+
+window.addEventListener(
+  "chili:select",
+  event => {
+
+    const action =
+      event.detail.action;
+
+
+    if (
+      action === "scan"
+    ) {
+
+      scanner.toggle();
+
+
+      assistant.say(
+        scanner.active
+          ? "SCANNER ONLINE"
+          : "SCANNER OFFLINE"
+      );
+    }
+
+
+    else if (
+      action === "menu"
+    ) {
+
+      menu.toggle();
+    }
+
+
+    else if (
+      action === "ai"
+    ) {
+
+      assistant.say(
+        "CHILI AI READY"
+      );
+    }
+
+
+    else if (
+      action === "system"
+    ) {
+
+      assistant.say(
+        "SYSTEM NOMINAL"
+      );
+    }
+
+
+    else if (
+      action === "objects"
+    ) {
+
+      assistant.say(
+        `${scanner.objects.length} OBJECTS TRACKED`
+      );
+    }
+
+
+    else if (
+      action === "world"
+    ) {
+
+      world.enable();
+
+
+      assistant.say(
+        "WORLD MODE ONLINE"
+      );
+    }
+  }
+);
+
+
+/* =============================
+   MODULE MESSAGES
+============================= */
+
+window.addEventListener(
+  "chili:message",
+  event => {
+
+    assistant.say(
+      event.detail.text
+    );
+  }
+);
+
+
+/* =============================
+   DEMO SAFETY EVENT
+
+   This is only simulated.
+   Later CV generates this.
+============================= */
+
+window.addEventListener(
+  "chili:detections",
+  event => {
+
+    const forklift =
+      event.detail.objects.find(
+        object =>
+          object.label ===
+          "FORKLIFT"
+      );
+
+
+    if (forklift) {
+
+      setTimeout(
+        () => {
+
+          assistant.alert({
+            type:"warning",
+
+            text:
+              "DEMO: FORKLIFT DETECTED",
+
+            objectId:
+              forklift.id
+          });
+
+        },
+        1000
+      );
+    }
+  }
+);
+
+
+/* =============================
+   3D / HEAD ORIENTATION TEST
+============================= */
+
+const worldMarker =
+  document.querySelector(
+    "#worldMarker"
+  );
+
+
+window.addEventListener(
+  "chili:orientation",
+  event => {
+
+    if (!worldMarker) {
+      return;
+    }
+
+
+    const yaw =
+      event.detail.yaw;
+
+
+    const pitch =
+      event.detail.pitch;
+
+
+    /*
+      Marker moves opposite the head.
+
+      This begins testing a
+      world-anchored object rather than
+      a head-controlled cursor.
+    */
+
+    const x =
+      -yaw * 4;
+
+
+    const y =
+      pitch * 4;
+
+
+    worldMarker.style.transform =
+      `translate(
+        calc(-50% + ${x}px),
+        calc(-50% + ${y}px)
+      )`;
+  }
+);
+
+
+/* =============================
+   EXPOSE FOR DEBUGGING
+============================= */
+
+window.CHILI = {
+
+  engine,
+  scanner,
+  menu,
+  assistant,
+  world
+
+};
+
+
+</script>
+<body>
+
+<div class="grid"></div>
+
+
+<div class="header">
+  <div class="title">
+    CHILI VISION
+  </div>
+
+  <div class="subtitle">
+    RAY-BAN HUD // ALPHA
+  </div>
+</div>
+
+
+<div id="status">
+  HEAD OFFLINE
+</div>
+
+
+<div id="reticle"></div>
+
+<div id="pointer"></div>
+
+
+<!-- =====================
+     INTERACTIVE TARGETS
+===================== -->
+
+<div
+  id="scan"
+  class="hud-button"
+  data-action="scan"
+>
+  SCAN
+
+  <div class="progress">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+
+
+<div
+  id="menu"
+  class="hud-button"
+  data-action="menu"
+>
+  MENU
+
+  <div class="progress">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+
+
+<div
+  id="system"
+  class="hud-button"
+  data-action="system"
+>
+  STATUS
+
+  <div class="progress">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+
+
+<div
+  id="chiliAI"
+  class="hud-button"
+  data-action="ai"
+>
+  CHILI AI
+
+  <div class="progress">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+
+
+<div id="messageBox">
+  CHILI READY
+</div>
+
+
+<div class="telemetry">
+
+  HEAD:
+  <strong id="headState">
+    --
+  </strong>
+
+  <br>
+
+  TARGET:
+  <strong id="targetState">
+    NONE
+  </strong>
+
+  <br>
+
+  SENSOR:
+  <strong id="sensorFPS">
+    0
+  </strong>
+  Hz
+
+</div>
+
+
+<button id="recenter">
+  RECENTER
+</button>
+
+
+<!-- START -->
+
+<div id="start">
+
+  <div class="start-title">
+    CHILI
+  </div>
+
+  <div class="start-sub">
+    VISION GLASSES HUD
+  </div>
+
+  <button id="enable">
+    ENABLE HEAD CONTROL
+  </button>
+
+  <div id="startMessage">
+    Look straight ahead when enabling.
+  </div>
+
+</div>
+
+
+<script>
+</script>
+
+</body>
+</html>
