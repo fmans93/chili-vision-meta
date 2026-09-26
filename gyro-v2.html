@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 
@@ -8,584 +9,295 @@
   content="width=device-width,initial-scale=1,user-scalable=no"
 >
 
-<title>CHILI // Motion V2</title>
+<title>CHILI // Glasses Gyro V2</title>
 
 <style>
 
-:root {
-  --green:#00ff88;
-  --green2:#72ffb7;
-  --cyan:#38dfff;
-  --yellow:#ffd84a;
-  --red:#ff4055;
-  --bg:#020806;
-  --panel:rgba(0,18,11,.78);
-  --line:rgba(0,255,136,.35);
-  --muted:#6fa88b;
-}
-
 * {
-  box-sizing:border-box;
+  box-sizing: border-box;
 }
 
 html,
 body {
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 
-  background:var(--bg);
-  color:var(--green);
+  background: #020806;
+  color: #00ff88;
 
   font-family:
     Consolas,
     Monaco,
     monospace;
+}
 
-  touch-action:none;
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
-/* =====================================================
-   BACKGROUND
-   ===================================================== */
+/* GRID */
 
 .grid {
-  position:fixed;
-  inset:0;
+  position: fixed;
+  inset: 0;
 
   background-image:
     linear-gradient(
-      rgba(0,255,136,.055) 1px,
+      rgba(0,255,136,.07) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(0,255,136,.055) 1px,
+      rgba(0,255,136,.07) 1px,
       transparent 1px
     );
 
-  background-size:40px 40px;
-
-  pointer-events:none;
+  background-size: 40px 40px;
+  pointer-events: none;
 }
 
 
-/* =====================================================
-   HEADER
-   ===================================================== */
+/* HEADER */
 
 .header {
-  position:fixed;
-
-  top:15px;
-  left:18px;
-
-  z-index:20;
+  position: fixed;
+  top: 18px;
+  left: 20px;
+  z-index: 20;
 }
 
 .title {
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:3px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 3px;
 }
 
 .subtitle {
-  margin-top:4px;
-
-  font-size:9px;
-  color:var(--muted);
-
-  letter-spacing:2px;
+  margin-top: 5px;
+  color: #5ba882;
+  font-size: 10px;
+  letter-spacing: 2px;
 }
 
 
-/* =====================================================
-   STATUS
-   ===================================================== */
+/* STATUS */
 
 #status {
-  position:fixed;
+  position: fixed;
+  top: 20px;
+  right: 20px;
 
-  right:18px;
-  top:16px;
+  padding: 8px 12px;
 
-  padding:7px 10px;
+  border: 1px solid #ff3b4f;
+  color: #ff3b4f;
 
-  border:1px solid var(--yellow);
-
-  color:var(--yellow);
-
-  font-size:9px;
-
-  background:var(--panel);
-
-  z-index:30;
+  font-size: 11px;
 }
 
 
-/* =====================================================
-   CENTER RETICLE
-   ===================================================== */
+/* SENSOR DATA */
+
+.data {
+  position: fixed;
+  left: 20px;
+  bottom: 25px;
+
+  width: 230px;
+  padding: 12px;
+
+  background: rgba(0,15,9,.8);
+  border: 1px solid rgba(0,255,136,.4);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+
+  margin: 6px 0;
+  font-size: 12px;
+}
+
+.label {
+  color: #6eaa8d;
+}
+
+.value {
+  color: #00ff88;
+  font-weight: bold;
+}
+
+
+/* RETICLE */
 
 #reticle {
-  position:fixed;
+  position: fixed;
 
-  left:50%;
-  top:50%;
+  left: 50%;
+  top: 50%;
 
-  width:80px;
-  height:80px;
+  width: 70px;
+  height: 70px;
 
-  transform:
-    translate(-50%,-50%);
+  margin-left: -35px;
+  margin-top: -35px;
 
-  border:
-    1px solid
-    rgba(0,255,136,.75);
-
-  border-radius:50%;
+  border: 2px solid #00ff88;
+  border-radius: 50%;
 
   box-shadow:
-    0 0 20px
-    rgba(0,255,136,.18);
+    0 0 18px rgba(0,255,136,.4);
 
-  pointer-events:none;
+  pointer-events: none;
 }
 
 #reticle::before,
 #reticle::after {
+  content: "";
 
-  content:"";
-
-  position:absolute;
-
-  background:
-    rgba(0,255,136,.7);
+  position: absolute;
+  background: #00ff88;
 }
 
 #reticle::before {
+  width: 100px;
+  height: 1px;
 
-  width:120px;
-  height:1px;
-
-  left:-21px;
-  top:39px;
+  left: -17px;
+  top: 33px;
 }
 
 #reticle::after {
+  width: 1px;
+  height: 100px;
 
-  height:120px;
-  width:1px;
-
-  top:-21px;
-  left:39px;
+  left: 33px;
+  top: -17px;
 }
 
 
-/* CENTER DOT */
-
-.center-dot {
-
-  position:fixed;
-
-  left:50%;
-  top:50%;
-
-  width:5px;
-  height:5px;
-
-  transform:
-    translate(-50%,-50%);
-
-  background:var(--green);
-
-  border-radius:50%;
-
-  box-shadow:
-    0 0 10px var(--green);
-}
-
-
-/* =====================================================
-   HEAD TARGET
-   ===================================================== */
+/* BLUE TARGET */
 
 #target {
+  position: fixed;
 
-  position:fixed;
+  width: 18px;
+  height: 18px;
 
-  left:50%;
-  top:50%;
+  border: 2px solid #38dfff;
+  border-radius: 50%;
 
-  width:22px;
-  height:22px;
+  left: 50%;
+  top: 50%;
 
-  margin-left:-11px;
-  margin-top:-11px;
-
-  border:
-    2px solid
-    var(--cyan);
-
-  border-radius:50%;
+  margin-left: -9px;
+  margin-top: -9px;
 
   box-shadow:
-    0 0 16px
-    rgba(56,223,255,.8);
+    0 0 15px #38dfff;
 
-  pointer-events:none;
-
-  will-change:transform;
-}
-
-#target::after {
-
-  content:"";
-
-  position:absolute;
-
-  width:4px;
-  height:4px;
-
-  left:7px;
-  top:7px;
-
-  background:var(--cyan);
-
-  border-radius:50%;
+  pointer-events: none;
 }
 
 
-/* =====================================================
-   DIRECTION INDICATORS
-   ===================================================== */
+/* RECENTER BUTTON */
 
-.direction {
+#recenterButton {
+  position: fixed;
 
-  position:fixed;
+  right: 20px;
+  bottom: 25px;
 
-  color:var(--muted);
+  padding: 11px 18px;
 
-  font-size:10px;
-
-  letter-spacing:2px;
-
-  opacity:.35;
-}
-
-#dirLeft {
-
-  left:12px;
-  top:50%;
-
-  transform:
-    translateY(-50%);
-}
-
-#dirRight {
-
-  right:12px;
-  top:50%;
-
-  transform:
-    translateY(-50%);
-}
-
-#dirUp {
-
-  top:68px;
-  left:50%;
-
-  transform:
-    translateX(-50%);
-}
-
-#dirDown {
-
-  bottom:75px;
-  left:50%;
-
-  transform:
-    translateX(-50%);
-}
-
-.direction.active {
-
-  opacity:1;
-
-  color:var(--cyan);
-
-  text-shadow:
-    0 0 8px var(--cyan);
-}
-
-
-/* =====================================================
-   SENSOR PANEL
-   ===================================================== */
-
-.sensor-panel {
-
-  position:fixed;
-
-  left:15px;
-  bottom:70px;
-
-  width:235px;
-
-  padding:10px;
-
-  border:
-    1px solid
-    var(--line);
-
-  background:var(--panel);
-
-  z-index:20;
-}
-
-.panel-title {
-
-  margin-bottom:7px;
-
-  color:var(--green);
-
-  font-size:9px;
-
-  letter-spacing:2px;
-}
-
-.row {
-
-  display:flex;
-
-  justify-content:
-    space-between;
-
-  margin:5px 0;
-
-  font-size:10px;
-}
-
-.label {
-  color:var(--muted);
-}
-
-.value {
-
-  color:var(--green2);
-
-  font-weight:bold;
-}
-
-
-/* =====================================================
-   ANGLE HUD
-   ===================================================== */
-
-.angle-panel {
-
-  position:fixed;
-
-  right:15px;
-  bottom:70px;
-
-  width:190px;
-
-  padding:10px;
-
-  border:
-    1px solid
-    rgba(56,223,255,.3);
-
-  background:var(--panel);
-
-  z-index:20;
-}
-
-.relative {
-
-  color:var(--cyan);
-}
-
-
-/* =====================================================
-   BOTTOM BUTTONS
-   ===================================================== */
-
-.controls {
-
-  position:fixed;
-
-  bottom:12px;
-  left:50%;
-
-  transform:
-    translateX(-50%);
-
-  display:flex;
-
-  gap:7px;
-
-  z-index:50;
-}
-
-button {
-
-  padding:9px 14px;
-
-  border:
-    1px solid
-    var(--green);
+  border: 1px solid #38dfff;
 
   background:
-    rgba(0,255,136,.08);
+    rgba(56,223,255,.1);
 
-  color:var(--green);
+  color: #38dfff;
 
-  font-family:inherit;
+  font-family: inherit;
+  font-weight: bold;
 
-  font-size:10px;
+  cursor: pointer;
 
-  font-weight:bold;
-
-  cursor:pointer;
-}
-
-button:active {
-
-  background:var(--green);
-
-  color:#00140a;
+  z-index: 50;
 }
 
 
-/* =====================================================
-   CALIBRATION MESSAGE
-   ===================================================== */
-
-#calibrationMessage {
-
-  position:fixed;
-
-  left:50%;
-  top:calc(50% + 65px);
-
-  transform:
-    translateX(-50%);
-
-  color:var(--muted);
-
-  font-size:9px;
-
-  letter-spacing:1px;
-
-  white-space:nowrap;
-}
-
-
-/* =====================================================
-   START SCREEN
-   ===================================================== */
+/* START SCREEN */
 
 #start {
+  position: fixed;
 
-  position:fixed;
+  z-index: 100;
+  inset: 0;
 
-  z-index:1000;
+  display: flex;
+  flex-direction: column;
 
-  inset:0;
+  align-items: center;
+  justify-content: center;
 
-  display:flex;
-
-  flex-direction:column;
-
-  justify-content:center;
-
-  align-items:center;
-
-  background:
-    radial-gradient(
-      circle,
-      #07301f,
-      #020806 68%
-    );
+  background: #020806;
 }
 
-.start-logo {
+.start-title {
+  font-size: 32px;
+  font-weight: bold;
 
-  font-size:38px;
+  letter-spacing: 4px;
 
-  font-weight:900;
-
-  letter-spacing:5px;
-
-  text-shadow:
-    0 0 20px
-    rgba(0,255,136,.4);
+  margin-bottom: 8px;
 }
 
 .start-sub {
+  color: #6eaa8d;
 
-  margin-top:7px;
+  font-size: 11px;
 
-  margin-bottom:25px;
-
-  color:var(--muted);
-
-  font-size:10px;
-
-  letter-spacing:3px;
+  margin-bottom: 25px;
 }
 
-#startMessage {
+button {
+  padding: 13px 24px;
 
-  margin-top:15px;
+  border: 1px solid #00ff88;
 
-  color:var(--muted);
+  background:
+    rgba(0,255,136,.1);
 
-  font-size:9px;
+  color: #00ff88;
 
-  max-width:330px;
+  font-family: inherit;
+  font-weight: bold;
 
-  text-align:center;
-
-  line-height:1.6;
+  cursor: pointer;
 }
 
+button:hover {
+  background: #00ff88;
+  color: #00150b;
+}
 
-/* =====================================================
-   SMALL DISPLAY
-   ===================================================== */
+#message {
+  margin-top: 15px;
 
-@media(max-width:600px) {
+  color: #6eaa8d;
 
-  .sensor-panel {
+  font-size: 10px;
 
-    width:175px;
+  max-width: 350px;
 
-    padding:7px;
-  }
+  text-align: center;
 
-  .angle-panel {
-
-    width:145px;
-
-    padding:7px;
-  }
-
-  .row {
-
-    font-size:8px;
-  }
-
-  .panel-title {
-
-    font-size:8px;
-  }
-
+  line-height: 1.5;
 }
 
 </style>
@@ -594,11 +306,8 @@ button:active {
 
 <body>
 
-
 <div class="grid"></div>
 
-
-<!-- HEADER -->
 
 <div class="header">
 
@@ -607,79 +316,32 @@ button:active {
   </div>
 
   <div class="subtitle">
-    HEAD TRACKING // V2
+    RAY-BAN SENSOR TEST // V2
   </div>
 
 </div>
 
 
 <div id="status">
-  SENSOR WAITING
+  WAITING FOR SENSOR
 </div>
 
 
-<!-- CENTER -->
-
 <div id="reticle"></div>
-
-<div class="center-dot"></div>
 
 <div id="target"></div>
 
 
-<div id="calibrationMessage">
-  CENTER = CALIBRATED VIEW
-</div>
-
-
-<!-- DIRECTIONS -->
-
-<div
-  id="dirLeft"
-  class="direction"
->
-  ◀ LEFT
-</div>
-
-<div
-  id="dirRight"
-  class="direction"
->
-  RIGHT ▶
-</div>
-
-<div
-  id="dirUp"
-  class="direction"
->
-  ▲ UP
-</div>
-
-<div
-  id="dirDown"
-  class="direction"
->
-  ▼ DOWN
-</div>
-
-
-<!-- RAW SENSOR -->
-
-<div class="sensor-panel">
-
-  <div class="panel-title">
-    RAW SENSOR
-  </div>
-
+<div class="data">
 
   <div class="row">
 
     <span class="label">
-      ALPHA
+      YAW / ALPHA
     </span>
 
     <span
-      id="rawAlpha"
+      id="alpha"
       class="value"
     >
       --
@@ -691,11 +353,11 @@ button:active {
   <div class="row">
 
     <span class="label">
-      BETA
+      PITCH / BETA
     </span>
 
     <span
-      id="rawBeta"
+      id="beta"
       class="value"
     >
       --
@@ -707,11 +369,11 @@ button:active {
   <div class="row">
 
     <span class="label">
-      GAMMA
+      ROLL / GAMMA
     </span>
 
     <span
-      id="rawGamma"
+      id="gamma"
       class="value"
     >
       --
@@ -727,7 +389,7 @@ button:active {
     </span>
 
     <span
-      id="eventCount"
+      id="events"
       class="value"
     >
       0
@@ -743,7 +405,7 @@ button:active {
     </span>
 
     <span
-      id="sensorFPS"
+      id="fps"
       class="value"
     >
       0
@@ -754,708 +416,319 @@ button:active {
 </div>
 
 
-<!-- RELATIVE SENSOR -->
+<button id="recenterButton">
+  RECENTER
+</button>
 
-<div class="angle-panel">
-
-  <div class="panel-title">
-    CALIBRATED
-  </div>
-
-
-  <div class="row">
-
-    <span class="label">
-      YAW
-    </span>
-
-    <span
-      id="yaw"
-      class="value relative"
-    >
-      0.0°
-    </span>
-
-  </div>
-
-
-  <div class="row">
-
-    <span class="label">
-      PITCH
-    </span>
-
-    <span
-      id="pitch"
-      class="value relative"
-    >
-      0.0°
-    </span>
-
-  </div>
-
-
-  <div class="row">
-
-    <span class="label">
-      ROLL
-    </span>
-
-    <span
-      id="roll"
-      class="value relative"
-    >
-      0.0°
-    </span>
-
-  </div>
-
-</div>
-
-
-<!-- CONTROLS -->
-
-<div class="controls">
-
-  <button id="recenterButton">
-    RECENTER
-  </button>
-
-  <button id="zeroRollButton">
-    ZERO ROLL
-  </button>
-
-</div>
-
-
-<!-- START -->
 
 <div id="start">
 
-  <div class="start-logo">
+  <div class="start-title">
     CHILI
   </div>
 
   <div class="start-sub">
-    MOTION SYSTEM V2
+    GLASSES MOTION SENSOR V2
   </div>
 
-  <button id="enableButton">
-    ENABLE HEAD TRACKING
+  <button id="startButton">
+    ENABLE MOTION
   </button>
 
-  <div id="startMessage">
-
-    Look straight ahead when enabling.
-    That direction becomes Chili's initial center.
-
+  <div id="message">
+    Look straight ahead, enable motion,
+    then move your head.
   </div>
 
 </div>
 
 
-
 <script>
 
-/* ==========================================================
-   CHILI MOTION V2
+/*
+=========================================================
+CHILI MOTION V2
 
-   Known-good concept:
+Based directly on the known-working V1.
 
-   Ray-Ban Display
-         ↓
-   DeviceOrientation
-         ↓
-   Chili JavaScript
-         ↓
-   Head-tracked HUD
+ONLY MAJOR ADDITION:
+RECENTER
+=========================================================
+*/
 
 
-   PURPOSE OF V2:
+const alphaElement =
+  document.getElementById("alpha");
 
-   1. Preserve raw orientation values.
-   2. Establish calibration center.
-   3. Calculate relative movement.
-   4. Smooth HUD movement.
-   5. Support RECENTER.
-   6. Measure sensor event rate.
-   ========================================================== */
+const betaElement =
+  document.getElementById("beta");
 
+const gammaElement =
+  document.getElementById("gamma");
 
-/* ==========================================================
-   DOM
-   ========================================================== */
+const eventElement =
+  document.getElementById("events");
 
-const rawAlphaEl =
-  document.getElementById(
-    "rawAlpha"
-  );
+const fpsElement =
+  document.getElementById("fps");
 
-const rawBetaEl =
-  document.getElementById(
-    "rawBeta"
-  );
-
-const rawGammaEl =
-  document.getElementById(
-    "rawGamma"
-  );
-
-const yawEl =
-  document.getElementById(
-    "yaw"
-  );
-
-const pitchEl =
-  document.getElementById(
-    "pitch"
-  );
-
-const rollEl =
-  document.getElementById(
-    "roll"
-  );
-
-const eventCountEl =
-  document.getElementById(
-    "eventCount"
-  );
-
-const sensorFPSEl =
-  document.getElementById(
-    "sensorFPS"
-  );
-
-const statusEl =
-  document.getElementById(
-    "status"
-  );
+const statusElement =
+  document.getElementById("status");
 
 const target =
-  document.getElementById(
-    "target"
-  );
+  document.getElementById("target");
 
 const startScreen =
-  document.getElementById(
-    "start"
-  );
+  document.getElementById("start");
 
-const startMessage =
-  document.getElementById(
-    "startMessage"
-  );
+const message =
+  document.getElementById("message");
 
 
-/* ==========================================================
-   STATE
-   ========================================================== */
+let eventCount = 0;
 
-const state = {
+let fpsEvents = 0;
 
-  enabled:false,
-
-  receivedSensor:false,
-
-  events:0,
-
-  fpsEvents:0,
-
-  lastFPS:
-    performance.now(),
-
-  rawAlpha:null,
-
-  rawBeta:null,
-
-  rawGamma:null,
-
-  centerAlpha:null,
-
-  centerBeta:null,
-
-  centerGamma:null,
-
-  yaw:0,
-
-  pitch:0,
-
-  roll:0,
-
-  targetX:0,
-
-  targetY:0,
-
-  smoothX:0,
-
-  smoothY:0
-
-};
+let lastFPSCheck =
+  performance.now();
 
 
-/* ==========================================================
-   ANGLE HELPERS
-   ========================================================== */
+/* CURRENT SENSOR VALUES */
 
-function normalizeAngle(
-  angle
-) {
+let currentAlpha = null;
 
-  while(
-    angle > 180
-  ) {
+let currentBeta = null;
 
-    angle -= 360;
-  }
+let currentGamma = null;
 
 
-  while(
-    angle < -180
-  ) {
+/* BASELINE */
 
-    angle += 360;
-  }
+let baselineAlpha = null;
 
+let baselineBeta = null;
 
-  return angle;
-}
+let baselineGamma = null;
 
 
-function difference(
-  value,
+/* SMOOTHED TARGET */
+
+let smoothX = 0;
+
+let smoothY = 0;
+
+
+/* ANGLE DIFFERENCE */
+
+function angleDifference(
+  current,
   baseline
 ) {
 
-  if(
-    value == null ||
-    baseline == null
-  ) {
+  let difference =
+    current - baseline;
 
-    return 0;
+
+  while (difference > 180) {
+    difference -= 360;
   }
 
 
-  return normalizeAngle(
-    value - baseline
-  );
-}
-
-
-/* ==========================================================
-   CALIBRATION
-   ========================================================== */
-
-function recenter() {
-
-  if(
-    state.rawAlpha == null &&
-    state.rawBeta == null &&
-    state.rawGamma == null
-  ) {
-
-    return;
+  while (difference < -180) {
+    difference += 360;
   }
 
 
-  state.centerAlpha =
-    state.rawAlpha || 0;
-
-  state.centerBeta =
-    state.rawBeta || 0;
-
-  state.centerGamma =
-    state.rawGamma || 0;
-
-
-  state.yaw = 0;
-
-  state.pitch = 0;
-
-  state.roll = 0;
-
-
-  state.targetX = 0;
-
-  state.targetY = 0;
-
-  state.smoothX = 0;
-
-  state.smoothY = 0;
-
-
-  statusEl.textContent =
-    "RECENTERED";
-
-
-  setTimeout(
-    () => {
-
-      if(
-        state.receivedSensor
-      ) {
-
-        statusEl.textContent =
-          "HEAD TRACKING ONLINE";
-      }
-
-    },
-    800
-  );
+  return difference;
 }
 
 
-/* ==========================================================
-   ZERO ROLL ONLY
-   ========================================================== */
+/* SENSOR EVENT */
 
-function zeroRoll() {
+function handleOrientation(event) {
 
-  if(
-    state.rawGamma == null
-  ) {
+  eventCount++;
 
-    return;
-  }
+  fpsEvents++;
 
 
-  state.centerGamma =
-    state.rawGamma;
-
-
-  statusEl.textContent =
-    "ROLL ZEROED";
-}
-
-
-/* ==========================================================
-   DEVICE ORIENTATION
-   ========================================================== */
-
-function handleOrientation(
-  event
-) {
-
-  state.events++;
-
-  state.fpsEvents++;
-
-
-  state.rawAlpha =
+  const alpha =
     event.alpha;
 
-  state.rawBeta =
+  const beta =
     event.beta;
 
-  state.rawGamma =
+  const gamma =
     event.gamma;
 
 
-  rawAlphaEl.textContent =
-    event.alpha == null
-      ? "NULL"
-      : event.alpha.toFixed(2);
-
-
-  rawBetaEl.textContent =
-    event.beta == null
-      ? "NULL"
-      : event.beta.toFixed(2);
-
-
-  rawGammaEl.textContent =
-    event.gamma == null
-      ? "NULL"
-      : event.gamma.toFixed(2);
-
-
-  eventCountEl.textContent =
-    state.events;
-
-
   /*
-     Event exists but contains no sensor data.
+  Save latest readings so RECENTER
+  can use them.
   */
 
-  if(
-    event.alpha == null &&
-    event.beta == null &&
-    event.gamma == null
+  currentAlpha = alpha;
+
+  currentBeta = beta;
+
+  currentGamma = gamma;
+
+
+  alphaElement.textContent =
+    alpha == null
+      ? "NULL"
+      : alpha.toFixed(2);
+
+
+  betaElement.textContent =
+    beta == null
+      ? "NULL"
+      : beta.toFixed(2);
+
+
+  gammaElement.textContent =
+    gamma == null
+      ? "NULL"
+      : gamma.toFixed(2);
+
+
+  eventElement.textContent =
+    eventCount;
+
+
+  if (
+    alpha == null &&
+    beta == null &&
+    gamma == null
   ) {
 
-    statusEl.textContent =
+    statusElement.textContent =
       "EVENT / NO VALUES";
 
-    statusEl.style.color =
+    statusElement.style.color =
       "#ffd84a";
 
-    statusEl.style.borderColor =
+    statusElement.style.borderColor =
       "#ffd84a";
 
     return;
   }
 
 
+  statusElement.textContent =
+    "MOTION ONLINE";
+
+  statusElement.style.color =
+    "#00ff88";
+
+  statusElement.style.borderColor =
+    "#00ff88";
+
+
   /*
-     FIRST VALID SENSOR EVENT
+  Same baseline behavior as V1.
   */
 
-  if(
-    !state.receivedSensor
+  if (
+    baselineAlpha === null
   ) {
 
-    state.receivedSensor =
-      true;
+    baselineAlpha =
+      alpha || 0;
 
+    baselineBeta =
+      beta || 0;
 
-    state.centerAlpha =
-      event.alpha || 0;
-
-    state.centerBeta =
-      event.beta || 0;
-
-    state.centerGamma =
-      event.gamma || 0;
-
-
-    statusEl.textContent =
-      "HEAD TRACKING ONLINE";
-
-
-    statusEl.style.color =
-      "#00ff88";
-
-
-    statusEl.style.borderColor =
-      "#00ff88";
+    baselineGamma =
+      gamma || 0;
   }
 
 
+  const yaw =
+    alpha == null
+      ? 0
+      : angleDifference(
+          alpha,
+          baselineAlpha
+        );
+
+
+  const pitch =
+    beta == null
+      ? 0
+      : beta - baselineBeta;
+
+
   /*
-     CALCULATE RELATIVE ORIENTATION
-
-     We are initially treating:
-
-     alpha → yaw
-     beta  → pitch
-     gamma → roll
-
-     The Ray-Ban test will tell us whether these
-     axes need to be remapped or inverted.
+  EXACT SAME SENSITIVITY AS V1.
   */
 
-  state.yaw =
-    difference(
-      event.alpha,
-      state.centerAlpha
-    );
+  const sensitivity =
+    7;
 
 
-  state.pitch =
-    difference(
-      event.beta,
-      state.centerBeta
-    );
+  const desiredX =
+    yaw * sensitivity;
 
 
-  state.roll =
-    difference(
-      event.gamma,
-      state.centerGamma
-    );
-
-
-  yawEl.textContent =
-    state.yaw.toFixed(1) +
-    "°";
-
-
-  pitchEl.textContent =
-    state.pitch.toFixed(1) +
-    "°";
-
-
-  rollEl.textContent =
-    state.roll.toFixed(1) +
-    "°";
+  const desiredY =
+    pitch * sensitivity;
 
 
   /*
-     Convert head angle into screen displacement.
-
-     This is intentionally adjustable.
+  EXACT SAME SMOOTHING AS V1.
   */
 
-  const horizontalSensitivity =
-    8;
+  smoothX +=
+    (desiredX - smoothX) *
+    0.15;
 
 
-  const verticalSensitivity =
-    8;
-
-
-  state.targetX =
-    state.yaw *
-    horizontalSensitivity;
-
-
-  state.targetY =
-    state.pitch *
-    verticalSensitivity;
+  smoothY +=
+    (desiredY - smoothY) *
+    0.15;
 
 
   /*
-     Prevent marker leaving display.
+  Keep target on screen.
   */
 
   const maxX =
     window.innerWidth *
-    .43;
+    0.42;
 
 
   const maxY =
     window.innerHeight *
-    .38;
+    0.38;
 
 
-  state.targetX =
+  smoothX =
     Math.max(
       -maxX,
       Math.min(
         maxX,
-        state.targetX
+        smoothX
       )
     );
 
 
-  state.targetY =
+  smoothY =
     Math.max(
       -maxY,
       Math.min(
         maxY,
-        state.targetY
+        smoothY
       )
     );
 
 
-  updateDirections();
-
-}
-
-
-/* ==========================================================
-   DIRECTION INDICATORS
-   ========================================================== */
-
-function updateDirections() {
-
-  const threshold =
-    5;
-
-
-  const left =
-    document.getElementById(
-      "dirLeft"
-    );
-
-
-  const right =
-    document.getElementById(
-      "dirRight"
-    );
-
-
-  const up =
-    document.getElementById(
-      "dirUp"
-    );
-
-
-  const down =
-    document.getElementById(
-      "dirDown"
-    );
-
-
-  left.classList.toggle(
-    "active",
-    state.yaw < -threshold
-  );
-
-
-  right.classList.toggle(
-    "active",
-    state.yaw > threshold
-  );
-
-
-  up.classList.toggle(
-    "active",
-    state.pitch < -threshold
-  );
-
-
-  down.classList.toggle(
-    "active",
-    state.pitch > threshold
-  );
-
-}
-
-
-/* ==========================================================
-   SMOOTH RENDER LOOP
-   ========================================================== */
-
-function render() {
-
-  /*
-     Low-pass interpolation.
-
-     Sensor updates and rendering are intentionally
-     separated.
-  */
-
-  const smoothing =
-    .16;
-
-
-  state.smoothX +=
-    (
-      state.targetX -
-      state.smoothX
-    ) *
-    smoothing;
-
-
-  state.smoothY +=
-    (
-      state.targetY -
-      state.smoothY
-    ) *
-    smoothing;
-
-
   target.style.transform =
-    `translate(
-      ${state.smoothX}px,
-      ${state.smoothY}px
-    )`;
-
-
-  requestAnimationFrame(
-    render
-  );
+    `translate(${smoothX}px, ${smoothY}px)`;
 }
 
 
-requestAnimationFrame(
-  render
-);
-
-
-/* ==========================================================
-   SENSOR FPS
-   ========================================================== */
+/* FPS COUNTER */
 
 setInterval(
   () => {
@@ -1466,26 +739,22 @@ setInterval(
 
     const elapsed =
       now -
-      state.lastFPS;
+      lastFPSCheck;
 
 
-    const fps =
+    fpsElement.textContent =
       Math.round(
-        state.fpsEvents *
+        fpsEvents *
         1000 /
         elapsed
       );
 
 
-    sensorFPSEl.textContent =
-      fps;
-
-
-    state.fpsEvents =
+    fpsEvents =
       0;
 
 
-    state.lastFPS =
+    lastFPSCheck =
       now;
 
   },
@@ -1493,25 +762,22 @@ setInterval(
 );
 
 
-/* ==========================================================
-   ENABLE
-   ========================================================== */
+/* ENABLE MOTION */
 
-async function enableSensors() {
+async function enableMotion() {
 
-  startMessage.textContent =
-    "REQUESTING SENSOR ACCESS...";
+  message.textContent =
+    "Requesting motion sensor...";
 
 
   try {
 
-
     /*
-       Permission method required on platforms
-       that expose requestPermission().
+    Keep the same permission logic
+    as our working V1.
     */
 
-    if(
+    if (
       typeof DeviceOrientationEvent !==
         "undefined" &&
 
@@ -1525,13 +791,13 @@ async function enableSensors() {
           .requestPermission();
 
 
-      if(
+      if (
         permission !==
         "granted"
       ) {
 
         throw new Error(
-          "Sensor permission denied."
+          "Motion permission denied."
         );
       }
     }
@@ -1544,39 +810,29 @@ async function enableSensors() {
     );
 
 
-    state.enabled =
-      true;
-
-
     startScreen.style.display =
       "none";
 
 
-    statusEl.textContent =
-      "WAITING FOR DATA";
+    statusElement.textContent =
+      "LISTENING...";
 
-
-    /*
-       Diagnose missing events.
-    */
 
     setTimeout(
       () => {
 
-        if(
-          state.events === 0
+        if (
+          eventCount === 0
         ) {
 
-          statusEl.textContent =
+          statusElement.textContent =
             "NO SENSOR EVENTS";
 
+          statusElement.style.color =
+            "#ff3b4f";
 
-          statusEl.style.color =
-            "#ff4055";
-
-
-          statusEl.style.borderColor =
-            "#ff4055";
+          statusElement.style.borderColor =
+            "#ff3b4f";
         }
 
       },
@@ -1585,32 +841,112 @@ async function enableSensors() {
 
   }
 
-  catch(error) {
 
-    console.error(
-      error
-    );
+  catch (error) {
+
+    console.error(error);
 
 
-    startMessage.textContent =
+    message.textContent =
       "ERROR: " +
       error.message;
   }
-
 }
 
 
-/* ==========================================================
-   CONTROLS
-   ========================================================== */
+/* =========================================================
+   NEW V2 FEATURE — RECENTER
+   ========================================================= */
+
+function recenter() {
+
+  /*
+  We need at least one usable sensor reading.
+  */
+
+  if (
+    currentAlpha == null &&
+    currentBeta == null &&
+    currentGamma == null
+  ) {
+
+    statusElement.textContent =
+      "NO SENSOR DATA";
+
+    return;
+  }
+
+
+  /*
+  Wherever the user is looking RIGHT NOW
+  becomes the new center.
+  */
+
+  baselineAlpha =
+    currentAlpha || 0;
+
+  baselineBeta =
+    currentBeta || 0;
+
+  baselineGamma =
+    currentGamma || 0;
+
+
+  /*
+  Immediately put the blue marker
+  back in the center.
+  */
+
+  smoothX = 0;
+
+  smoothY = 0;
+
+
+  target.style.transform =
+    "translate(0px, 0px)";
+
+
+  statusElement.textContent =
+    "RECENTERED";
+
+  statusElement.style.color =
+    "#38dfff";
+
+  statusElement.style.borderColor =
+    "#38dfff";
+
+
+  /*
+  Return normal status shortly afterward.
+  */
+
+  setTimeout(
+    () => {
+
+      statusElement.textContent =
+        "MOTION ONLINE";
+
+      statusElement.style.color =
+        "#00ff88";
+
+      statusElement.style.borderColor =
+        "#00ff88";
+
+    },
+    800
+  );
+}
+
+
+/* BUTTONS */
 
 document
   .getElementById(
-    "enableButton"
+    "startButton"
   )
   .addEventListener(
     "click",
-    enableSensors
+    enableMotion
   );
 
 
@@ -1622,21 +958,6 @@ document
     "click",
     recenter
   );
-
-
-document
-  .getElementById(
-    "zeroRollButton"
-  )
-  .addEventListener(
-    "click",
-    zeroRoll
-  );
-
-
-/* ==========================================================
-   END CHILI MOTION V2
-   ========================================================== */
 
 </script>
 
