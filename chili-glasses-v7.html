@@ -8,7 +8,7 @@
   content="width=device-width,initial-scale=1,user-scalable=no"
 >
 
-<title>CHILI VISION // Glasses HUD</title>
+<title>CHILI VISION // Glasses HUD V7 CLEAN</title>
 
 <style>
 
@@ -434,14 +434,11 @@ body {
   text-align:center;
 }
 
-</style>
-</head>
 
-<div id="scannerLayer"></div>
+/* =========================
+   SCANNER LAYER
+========================= */
 
-
-
-<style>
 #scannerLayer {
   position:fixed;
   inset:0;
@@ -450,139 +447,122 @@ body {
 }
 
 .detection-box {
-  position: absolute;
+  position:absolute;
 
-  border: 4px solid #00ff88;
+  border:4px solid #00ff88;
 
   box-shadow:
     0 0 12px rgba(0,255,136,.9),
     inset 0 0 12px rgba(0,255,136,.25);
 
-  pointer-events: none;
+  pointer-events:none;
 }
 
 .detection-label {
-  position: absolute;
-  left: -2px;
-  top: -34px;
+  position:absolute;
+  left:-2px;
+  top:-34px;
 
-  padding: 7px 10px;
+  padding:7px 10px;
 
-  background: #00ff88;
-  color: #00140a;
+  background:#00ff88;
+  color:#00140a;
 
-  font-size: 18px;
-  font-weight: bold;
+  font-size:18px;
+  font-weight:bold;
 
-  letter-spacing: 1px;
-  white-space: nowrap;
+  letter-spacing:1px;
+  white-space:nowrap;
 
-  box-shadow: 0 0 12px rgba(0,255,136,.7);
+  box-shadow:
+    0 0 12px rgba(0,255,136,.7);
 }
+
 
 /* ===== V7 ADVANCED SCANNER ===== */
 
 #scanSweep {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 2px;
-  background: #00ff88;
+  position:absolute;
+  left:0;
+  top:0;
+
+  width:100%;
+  height:2px;
+
+  background:#00ff88;
+
   box-shadow:
     0 0 8px #00ff88,
     0 0 18px rgba(0,255,136,.8);
-  display: none;
+
+  display:none;
 }
 
 .scan-active #scanSweep {
-  display: block;
+  display:block;
 }
 
 #scanReadout {
-  position: fixed;
-  right: 24px;
-  top: 70px;
+  position:fixed;
 
-  padding: 16px 20px;
+  right:24px;
+  top:70px;
 
-  border: 2px solid #00ff88;
-  border-radius: 8px;
+  padding:16px 20px;
 
-  background: rgba(0, 12, 8, .92);
+  border:2px solid #00ff88;
+  border-radius:8px;
 
-  color: #b8ffd9;
+  background:
+    rgba(0,12,8,.92);
 
-  font-size: 18px;
-  font-weight: bold;
+  color:#b8ffd9;
 
-  line-height: 1.8;
-  letter-spacing: 2px;
+  font-size:18px;
+  font-weight:bold;
+
+  line-height:1.8;
+  letter-spacing:2px;
 
   box-shadow:
     0 0 12px rgba(0,255,136,.5);
 
-  z-index: 100;
+  z-index:100;
 }
 
 #scanReadout strong {
-  color: #00ff88;
+  color:#00ff88;
 }
 
 .track-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 5px;
-  height: 5px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: #38dfff;
-  box-shadow: 0 0 8px #38dfff;
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:5px;
+  height:5px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:#38dfff;
+
+  box-shadow:
+    0 0 8px #38dfff;
 }
 
 .scan-active #reticle {
   box-shadow:
     0 0 25px rgba(0,255,136,.8);
 }
-</style>
-<div id="chiliMenu">
 
-  <div
-    class="menu-option"
-    data-chili-target="scan"
-  >
-    SCAN
-    <div class="chili-dwell-fill"></div>
-  </div>
 
-  <div
-    class="menu-option"
-    data-chili-target="objects"
-  >
-    OBJECTS
-    <div class="chili-dwell-fill"></div>
-  </div>
-
-  <div
-    class="menu-option"
-    data-chili-target="ai"
-  >
-    CHILI AI
-    <div class="chili-dwell-fill"></div>
-  </div>
-
-  <div
-    class="menu-option"
-    data-chili-target="system"
-  >
-    SYSTEM
-    <div class="chili-dwell-fill"></div>
-  </div>
-
-</div>
-
-<style>
+/* =========================
+   CHILI MENU
+========================= */
 
 #chiliMenu {
   position:fixed;
@@ -668,20 +648,10 @@ body {
   background:#38dfff;
 }
 
-</style>
-<div id="assistantPanel">
 
-  <div class="assistant-title">
-    🌶 CHILI
-  </div>
-
-  <div id="assistantMessage">
-    SYSTEM READY
-  </div>
-
-</div>
-
-<style>
+/* =========================
+   ASSISTANT
+========================= */
 
 #assistantPanel {
   position:fixed;
@@ -738,16 +708,10 @@ body {
   font-size:11px;
 }
 
-</style>
-<div id="worldLayer">
 
-  <div id="worldMarker">
-    ◇
-  </div>
-
-</div>
-
-<style>
+/* =========================
+   WORLD LAYER
+========================= */
 
 #worldLayer {
   position:fixed;
@@ -777,564 +741,86 @@ body {
 }
 
 </style>
-<script type="module">
+</head>
 
-import {
-  ChiliGlassesEngine
-} from "./js/glasses-engine.js";
-
-import {
-  ChiliScanner
-} from "./js/glasses-scanner.js";
-
-import {
-  ChiliMenu
-} from "./js/glasses-menu.js";
-
-import {
-  ChiliAssistant
-} from "./js/glasses-assistant.js";
-
-import {
-  ChiliWorld
-} from "./js/glasses-world.js";
-import {
-    ChiliCamera
-} from "./js/camera.js";
-
-import {
-    ChiliDetector
-} from "./js/detector.js";
-
-/* =============================
-   SYSTEMS
-============================= */
-
-const engine =
-  new ChiliGlassesEngine({
-    pointer:"#pointer",
-    status:"#status",
-    fps:"#sensorFPS",
-
-    sensitivityX:7,
-
-    // Corrected from our Ray-Ban test.
-    sensitivityY:-7,
-
-    smoothing:.15,
-
-    dwellRequired:1000
-  });
-
-
-const scanner =
-  new ChiliScanner();
-
-
-const menu =
-  new ChiliMenu();
-
-
-const assistant =
-  new ChiliAssistant();
-
-
-const world =
-  new ChiliWorld();
-/* ==============================
-   REAL VISION SYSTEM
-============================== */
-
-const cameraVideo =
-    document.querySelector("#chiliCamera");
-
-const camera =
-    new ChiliCamera(cameraVideo);
-
-const detector =
-    new ChiliDetector();
-
-let visionRunning = false;
-
-/* =============================
-   START MOTION
-
-   IMPORTANT:
-   Sensor permission must remain
-   behind a physical user click.
-============================= */
-
-const enableButton =
-  document.querySelector(
-    "#enable"
-  );
-
-
-if (enableButton) {
-
-  /*
-    Replace the old button with a clone
-    so the legacy listener in the copied
-    standalone page does not also run.
-  */
-
-  const cleanButton =
-    enableButton.cloneNode(true);
-
-
-  enableButton.replaceWith(
-    cleanButton
-  );
-
-
-  cleanButton.addEventListener(
-    "click",
-    async () => {
-
-      const success =
-        await engine.enable();
-
-
-      if (success) {
-
-        const start =
-          document.querySelector(
-            "#start"
-          );
-
-
-        if (start) {
-
-          start.style.display =
-            "none";
-        }
-
-
-        assistant.say(
-          "CHILI VISION ONLINE"
-        );
-      }
-    }
-  );
-}
-
-
-/* =============================
-   RECENTER
-============================= */
-
-const recenterButton =
-  document.querySelector(
-    "#recenter"
-  );
-
-
-if (recenterButton) {
-
-  const cleanRecenter =
-    recenterButton.cloneNode(true);
-
-
-  recenterButton.replaceWith(
-    cleanRecenter
-  );
-
-
-  cleanRecenter.addEventListener(
-    "click",
-    () => {
-
-      engine.recenter();
-
-
-      assistant.say(
-        "VIEW RECENTERED"
-      );
-    }
-  );
-}
-
-
-/* =============================
-   HEAD SELECTION
-============================= */
-/* =========================================
-   REAL PERSON DETECTION LOOP
-========================================= */
-
-async function runRealVision() {
-
-    const scannerLayer =
-        document.querySelector("#scannerLayer");
-
-    while (visionRunning) {
-
-        try {
-
-            const detections =
-                await detector.detect(cameraVideo);
-
-            // For now we only want real people.
-            const people =
-                detections.filter(
-                    object =>
-                        object.class === "person"
-                );
-
-            // Remove boxes from the previous frame.
-            scannerLayer
-                .querySelectorAll(".real-detection")
-                .forEach(box => box.remove());
-
-
-            for (let i = 0; i < people.length; i++) {
-
-                const person = people[i];
-
-                const [
-                    x,
-                    y,
-                    width,
-                    height
-                ] = person.bbox;
-
-
-                /*
-                  COCO gives coordinates based on
-                  the camera frame.
-
-                  Convert them to percentages so
-                  they fit the glasses HUD.
-                */
-
-                const left =
-                    (x / cameraVideo.videoWidth) * 100;
-
-                const top =
-                    (y / cameraVideo.videoHeight) * 100;
-
-                const boxWidth =
-                    (width / cameraVideo.videoWidth) * 100;
-
-                const boxHeight =
-                    (height / cameraVideo.videoHeight) * 100;
-
-
-                const box =
-                    document.createElement("div");
-
-                box.className =
-                    "detection-box real-detection";
-
-                box.style.left =
-                    `${left}%`;
-
-                box.style.top =
-                    `${top}%`;
-
-                box.style.width =
-                    `${boxWidth}%`;
-
-                box.style.height =
-                    `${boxHeight}%`;
-
-
-                box.innerHTML = `
-                    <div class="detection-label">
-                        PERSON
-                        ${Math.round(person.score * 100)}%
-                    </div>
-                `;
-
-
-                scannerLayer.appendChild(box);
-            }
-
-
-            // Small delay keeps the glasses/browser
-            // from trying to run detection too fast.
-            await new Promise(
-                resolve => setTimeout(resolve, 100)
-            );
-
-        } catch (error) {
-
-            console.error(
-                "REAL VISION LOOP ERROR:",
-                error
-            );
-
-            assistant.say(
-                "VISION TRACKING ERROR"
-            );
-
-            visionRunning = false;
-        }
-    }
-
-
-    // Remove detection boxes when SCAN stops.
-    scannerLayer
-        .querySelectorAll(".real-detection")
-        .forEach(box => box.remove());
-}
-
-window.addEventListener(
-  "chili:select",
-  async event => {
-
-    const action =
-      event.detail.action;
-
-
-    if (
-    action === "scan"
-) {
-
-    if (!visionRunning) {
-
-        visionRunning = true;
-
-        assistant.say(
-            "STARTING REAL VISION..."
-        );
-
-        try {
-
-            await camera.start();
-
-            assistant.say(
-                "LOADING DETECTOR..."
-            );
-
-            await detector.load();
-
-            assistant.say(
-                "REAL VISION ONLINE"
-            );
-
-            runRealVision();
-
-        } catch (error) {
-
-            console.error(
-                "VISION ERROR:",
-                error
-            );
-
-            visionRunning = false;
-
-            assistant.say(
-                "VISION STARTUP ERROR"
-            );
-        }
-
-    } else {
-
-        visionRunning = false;
-
-        assistant.say(
-            "REAL VISION OFFLINE"
-        );
-    }
-}
-
-    else if (
-      action === "menu"
-    ) {
-
-      menu.toggle();
-    }
-
-
-    else if (
-      action === "ai"
-    ) {
-
-      assistant.say(
-        "CHILI AI READY"
-      );
-    }
-
-
-    else if (
-      action === "system"
-    ) {
-
-      assistant.say(
-        "SYSTEM NOMINAL"
-      );
-    }
-
-
-    else if (
-      action === "objects"
-    ) {
-
-      assistant.say(
-        `${scanner.objects.length} OBJECTS TRACKED`
-      );
-    }
-
-
-    else if (
-      action === "world"
-    ) {
-
-      world.enable();
-
-
-      assistant.say(
-        "WORLD MODE ONLINE"
-      );
-    }
-  }
-);
-
-
-/* =============================
-   MODULE MESSAGES
-============================= */
-
-window.addEventListener(
-  "chili:message",
-  event => {
-
-    assistant.say(
-      event.detail.text
-    );
-  }
-);
-
-
-/* =============================
-   DEMO SAFETY EVENT
-
-   This is only simulated.
-   Later CV generates this.
-============================= */
-
-window.addEventListener(
-  "chili:detections",
-  event => {
-
-    const forklift =
-      event.detail.objects.find(
-        object =>
-          object.label ===
-          "FORKLIFT"
-      );
-
-
-    if (forklift) {
-
-      setTimeout(
-        () => {
-
-          assistant.alert({
-            type:"warning",
-
-            text:
-              "DEMO: FORKLIFT DETECTED",
-
-            objectId:
-              forklift.id
-          });
-
-        },
-        1000
-      );
-    }
-  }
-);
-
-
-/* =============================
-   3D / HEAD ORIENTATION TEST
-============================= */
-
-const worldMarker =
-  document.querySelector(
-    "#worldMarker"
-  );
-
-
-window.addEventListener(
-  "chili:orientation",
-  event => {
-
-    if (!worldMarker) {
-      return;
-    }
-
-
-    const yaw =
-      event.detail.yaw;
-
-
-    const pitch =
-      event.detail.pitch;
-
-
-    /*
-      Marker moves opposite the head.
-
-      This begins testing a
-      world-anchored object rather than
-      a head-controlled cursor.
-    */
-
-    const x =
-      -yaw * 4;
-
-
-    const y =
-      pitch * 4;
-
-
-    worldMarker.style.transform =
-      `translate(
-        calc(-50% + ${x}px),
-        calc(-50% + ${y}px)
-      )`;
-  }
-);
-
-
-/* =============================
-   EXPOSE FOR DEBUGGING
-============================= */
-
-window.CHILI = {
-
-  engine,
-  scanner,
-  menu,
-  assistant,
-  world
-
-};
-
-
-</script>
 <body>
-    <!-- REAL CHILI VISION CAMERA SOURCE -->
+
+<!-- REAL CHILI VISION CAMERA SOURCE -->
 <video
   id="chiliCamera"
   autoplay
   playsinline
   muted
   style="
-    position: fixed;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
+    position:fixed;
+    width:1px;
+    height:1px;
+    opacity:0;
+    pointer-events:none;
   ">
 </video>
 
 <div class="grid"></div>
 
+<div id="scannerLayer">
+  <div id="scanSweep"></div>
+</div>
+
+<div id="chiliMenu">
+
+  <div
+    class="menu-option"
+    data-chili-target="scan"
+  >
+    SCAN
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+  <div
+    class="menu-option"
+    data-chili-target="objects"
+  >
+    OBJECTS
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+  <div
+    class="menu-option"
+    data-chili-target="ai"
+  >
+    CHILI AI
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+  <div
+    class="menu-option"
+    data-chili-target="system"
+  >
+    SYSTEM
+    <div class="chili-dwell-fill"></div>
+  </div>
+
+</div>
+
+<div id="assistantPanel">
+
+  <div class="assistant-title">
+    🌶 CHILI
+  </div>
+
+  <div id="assistantMessage">
+    SYSTEM READY
+  </div>
+
+</div>
+
+<div id="worldLayer">
+
+  <div id="worldMarker">
+    ◇
+  </div>
+
+</div>
 
 <div class="header">
   <div class="title">
@@ -1342,20 +828,17 @@ window.CHILI = {
   </div>
 
   <div class="subtitle">
-    RAY-BAN HUD // ALPHA
+    RAY-BAN HUD // V7 CLEAN
   </div>
 </div>
-
 
 <div id="status">
   HEAD OFFLINE
 </div>
 
-
 <div id="reticle"></div>
 
 <div id="pointer"></div>
-
 
 <!-- =====================
      INTERACTIVE TARGETS
@@ -1365,6 +848,7 @@ window.CHILI = {
   id="scan"
   class="hud-button"
   data-action="scan"
+  data-chili-target="scan"
 >
   SCAN
 
@@ -1373,11 +857,11 @@ window.CHILI = {
   </div>
 </div>
 
-
 <div
   id="menu"
   class="hud-button"
   data-action="menu"
+  data-chili-target="menu"
 >
   MENU
 
@@ -1386,11 +870,11 @@ window.CHILI = {
   </div>
 </div>
 
-
 <div
   id="system"
   class="hud-button"
   data-action="system"
+  data-chili-target="system"
 >
   STATUS
 
@@ -1399,11 +883,11 @@ window.CHILI = {
   </div>
 </div>
 
-
 <div
   id="chiliAI"
   class="hud-button"
   data-action="ai"
+  data-chili-target="ai"
 >
   CHILI AI
 
@@ -1412,11 +896,9 @@ window.CHILI = {
   </div>
 </div>
 
-
 <div id="messageBox">
   CHILI READY
 </div>
-
 
 <div class="telemetry">
 
@@ -1442,13 +924,9 @@ window.CHILI = {
 
 </div>
 
-
 <button id="recenter">
   RECENTER
 </button>
-
-
-<!-- START -->
 
 <div id="start">
 
@@ -1469,769 +947,823 @@ window.CHILI = {
   </div>
 
 </div>
+<script type="module">
+
+import {
+  ChiliGlassesEngine
+} from "./js/glasses-engine.js";
+
+import {
+  ChiliScanner
+} from "./js/glasses-scanner.js";
+
+import {
+  ChiliMenu
+} from "./js/glasses-menu.js";
+
+import {
+  ChiliAssistant
+} from "./js/glasses-assistant.js";
+
+import {
+  ChiliWorld
+} from "./js/glasses-world.js";
+
+import {
+  ChiliCamera
+} from "./js/camera.js";
+
+import {
+  ChiliDetector
+} from "./js/detector.js";
 
 
-<script>
-
-/* =====================================================
-   CHILI VISION
-   RAY-BAN HEAD CONTROL HUD
-
-   Built from our known-working
-   DeviceOrientation implementation.
-===================================================== */
+/* =========================================
+   CHILI VISION V7 CLEAN
+========================================= */
 
 
-/* =========================
-   ELEMENTS
-========================= */
+/* =============================
+   SYSTEMS
+============================= */
 
-const pointer =
-  document.getElementById("pointer");
+const engine =
+  new ChiliGlassesEngine({
 
-const start =
-  document.getElementById("start");
+    pointer:"#pointer",
 
-const status =
-  document.getElementById("status");
+    status:"#status",
 
-const messageBox =
-  document.getElementById("messageBox");
+    fps:"#sensorFPS",
 
-const headState =
-  document.getElementById("headState");
+    sensitivityX:7,
 
-const targetState =
-  document.getElementById("targetState");
+    sensitivityY:-7,
 
-const sensorFPSElement =
-  document.getElementById("sensorFPS");
+    smoothing:.15,
+
+    dwellRequired:1000
+
+  });
 
 
-const hudButtons =
-  Array.from(
-    document.querySelectorAll(
-      ".hud-button"
-    )
+const scanner =
+  new ChiliScanner();
+
+
+const menu =
+  new ChiliMenu();
+
+
+const assistant =
+  new ChiliAssistant();
+
+
+const world =
+  new ChiliWorld();
+
+
+/* ==============================
+   REAL VISION SYSTEM
+============================== */
+
+const cameraVideo =
+  document.querySelector(
+    "#chiliCamera"
   );
 
 
-/* =========================
-   SENSOR STATE
-========================= */
-
-let eventCount = 0;
-
-let fpsEvents = 0;
-
-let lastFPSCheck =
-  performance.now();
+const camera =
+  new ChiliCamera(
+    cameraVideo
+  );
 
 
-let currentAlpha = null;
-let currentBeta = null;
-let currentGamma = null;
+const detector =
+  new ChiliDetector();
 
 
-let baselineAlpha = null;
-let baselineBeta = null;
-let baselineGamma = null;
+let visionRunning =
+  false;
 
 
-let smoothX = 0;
-let smoothY = 0;
+/* =============================
+   START MOTION
+
+   Sensor permission remains
+   behind a physical user click.
+============================= */
+
+const enableButton =
+  document.querySelector(
+    "#enable"
+  );
 
 
-/* =========================
-   INTERACTION STATE
-========================= */
-
-let activeTarget = null;
-
-let dwellStart = 0;
-
-const dwellRequired =
-  1100;
-
-let targetLocked = false;
-
-
-/* =========================
-   ANGLE
-========================= */
-
-function angleDifference(
-  current,
-  baseline
-) {
-
-  let difference =
-    current - baseline;
-
-
-  while (
-    difference > 180
-  ) {
-
-    difference -= 360;
-  }
-
-
-  while (
-    difference < -180
-  ) {
-
-    difference += 360;
-  }
-
-
-  return difference;
-}
-
-
-/* =========================
-   SENSOR EVENT
-========================= */
-
-function handleOrientation(event) {
-
-  eventCount++;
-  fpsEvents++;
-
-
-  const alpha =
-    event.alpha;
-
-  const beta =
-    event.beta;
-
-  const gamma =
-    event.gamma;
-
-
-  currentAlpha = alpha;
-  currentBeta = beta;
-  currentGamma = gamma;
-
-
-  if (
-    alpha == null &&
-    beta == null &&
-    gamma == null
-  ) {
-
-    status.textContent =
-      "NO SENSOR VALUES";
-
-    return;
-  }
-
-
-  status.textContent =
-    "HEAD ONLINE";
-
-  headState.textContent =
-    "TRACKING";
-
-
-  if (
-    baselineAlpha === null
-  ) {
-
-    baselineAlpha =
-      alpha || 0;
-
-    baselineBeta =
-      beta || 0;
-
-    baselineGamma =
-      gamma || 0;
-  }
-
-
-  const yaw =
-    alpha == null
-      ? 0
-      : angleDifference(
-          alpha,
-          baselineAlpha
-        );
-
-
-  const pitch =
-    beta == null
-      ? 0
-      : beta - baselineBeta;
-
+if (enableButton) {
 
   /*
-    Same horizontal behavior that
-    already worked on the glasses.
+    Replace with a clean clone so
+    no copied/legacy listener can
+    execute at the same time.
   */
 
-  const desiredX =
-    yaw * 7;
+  const cleanButton =
+    enableButton.cloneNode(true);
 
 
-  /*
-    IMPORTANT:
-
-    Your physical test showed:
-
-    LOOK UP   -> pointer DOWN
-    LOOK DOWN -> pointer UP
-
-    We keep the proven behavior here
-    for the first interactive build.
-
-    We can invert this later depending
-    on the HUD mode we want.
-  */
-
-  const desiredY =
-    pitch * 7;
-
-
-  smoothX +=
-    (desiredX - smoothX) *
-    0.15;
-
-
-  smoothY +=
-    (desiredY - smoothY) *
-    0.15;
-
-
-  const maxX =
-    window.innerWidth *
-    0.44;
-
-
-  const maxY =
-    window.innerHeight *
-    0.40;
-
-
-  smoothX =
-    Math.max(
-      -maxX,
-      Math.min(
-        maxX,
-        smoothX
-      )
-    );
-
-
-  smoothY =
-    Math.max(
-      -maxY,
-      Math.min(
-        maxY,
-        smoothY
-      )
-    );
-
-
-  pointer.style.transform =
-    `translate(
-      ${smoothX}px,
-      ${smoothY}px
-    )`;
-}
-
-
-/* =========================
-   POINTER POSITION
-========================= */
-
-function getPointerCenter() {
-
-  const rect =
-    pointer.getBoundingClientRect();
-
-
-  return {
-
-    x:
-      rect.left +
-      rect.width / 2,
-
-    y:
-      rect.top +
-      rect.height / 2
-
-  };
-}
-
-
-/* =========================
-   TARGET DETECTION
-========================= */
-
-function findTarget() {
-
-  const p =
-    getPointerCenter();
-
-
-  for (
-    const button
-    of hudButtons
-  ) {
-
-    const rect =
-      button.getBoundingClientRect();
-
-
-    /*
-      Slightly enlarged hitbox makes
-      head selection easier.
-    */
-
-    const padding =
-      12;
-
-
-    if (
-      p.x >= rect.left - padding &&
-      p.x <= rect.right + padding &&
-      p.y >= rect.top - padding &&
-      p.y <= rect.bottom + padding
-    ) {
-
-      return button;
-    }
-  }
-
-
-  return null;
-}
-
-
-/* =========================
-   RESET BUTTON
-========================= */
-
-function resetTarget(
-  button
-) {
-
-  if (!button) {
-    return;
-  }
-
-
-  button.classList.remove(
-    "targeted"
+  enableButton.replaceWith(
+    cleanButton
   );
 
 
-  const fill =
-    button.querySelector(
-      ".progress-fill"
-    );
+  cleanButton.addEventListener(
+    "click",
 
+    async () => {
 
-  if (fill) {
+      const success =
+        await engine.enable();
 
-    fill.style.width =
-      "0%";
-  }
-}
 
+      if (success) {
 
-/* =========================
-   ACTION
-========================= */
+        const start =
+          document.querySelector(
+            "#start"
+          );
 
-function activateTarget(
-  button
-) {
 
-  const action =
-    button.dataset.action;
+        if (start) {
 
+          start.style.display =
+            "none";
 
-  button.classList.add(
-    "activated"
-  );
-
-
-  if (
-    action === "scan"
-  ) {
-
-    showMessage(
-      "SCAN MODE ARMED"
-    );
-  }
-
-
-  else if (
-    action === "menu"
-  ) {
-
-    showMessage(
-      "CHILI MENU OPEN"
-    );
-  }
-
-
-  else if (
-    action === "system"
-  ) {
-
-    showMessage(
-      "SYSTEM ONLINE // HEAD TRACKING OK"
-    );
-  }
-
-
-  else if (
-    action === "ai"
-  ) {
-
-    showMessage(
-      "CHILI AI READY"
-    );
-  }
-
-
-  setTimeout(
-    () => {
-
-      button.classList.remove(
-        "activated"
-      );
-
-    },
-    500
-  );
-}
-
-
-/* =========================
-   MESSAGE
-========================= */
-
-function showMessage(
-  text
-) {
-
-  messageBox.textContent =
-    text;
-
-
-  messageBox.classList.add(
-    "show"
-  );
-
-
-  setTimeout(
-    () => {
-
-      messageBox.classList.remove(
-        "show"
-      );
-
-    },
-    1600
-  );
-}
-
-
-/* =========================
-   INTERACTION LOOP
-========================= */
-
-function interactionLoop() {
-
-  const target =
-    findTarget();
-
-
-  if (
-    target !== activeTarget
-  ) {
-
-    resetTarget(
-      activeTarget
-    );
-
-
-    activeTarget =
-      target;
-
-
-    dwellStart =
-      performance.now();
-
-
-    targetLocked =
-      false;
-  }
-
-
-  if (
-    activeTarget
-  ) {
-
-    activeTarget.classList.add(
-      "targeted"
-    );
-
-
-    targetState.textContent =
-      activeTarget
-        .dataset
-        .action
-        .toUpperCase();
-
-
-    const elapsed =
-      performance.now() -
-      dwellStart;
-
-
-    const progress =
-      Math.min(
-        1,
-        elapsed /
-        dwellRequired
-      );
-
-
-    const fill =
-      activeTarget.querySelector(
-        ".progress-fill"
-      );
-
-
-    if (fill) {
-
-      fill.style.width =
-        `${progress * 100}%`;
-    }
-
-
-    if (
-      progress >= 1 &&
-      !targetLocked
-    ) {
-
-      targetLocked =
-        true;
-
-
-      activateTarget(
-        activeTarget
-      );
-    }
-
-  }
-
-  else {
-
-    targetState.textContent =
-      "NONE";
-  }
-
-
-  requestAnimationFrame(
-    interactionLoop
-  );
-}
-
-
-requestAnimationFrame(
-  interactionLoop
-);
-
-
-/* =========================
-   SENSOR FPS
-========================= */
-
-setInterval(
-  () => {
-
-    const now =
-      performance.now();
-
-
-    const elapsed =
-      now -
-      lastFPSCheck;
-
-
-    sensorFPSElement.textContent =
-      Math.round(
-        fpsEvents *
-        1000 /
-        elapsed
-      );
-
-
-    fpsEvents =
-      0;
-
-
-    lastFPSCheck =
-      now;
-
-  },
-  1000
-);
-
-
-/* =========================
-   RECENTER
-========================= */
-
-function recenter() {
-
-  if (
-    currentAlpha == null &&
-    currentBeta == null &&
-    currentGamma == null
-  ) {
-
-    return;
-  }
-
-
-  baselineAlpha =
-    currentAlpha || 0;
-
-  baselineBeta =
-    currentBeta || 0;
-
-  baselineGamma =
-    currentGamma || 0;
-
-
-  smoothX = 0;
-  smoothY = 0;
-
-
-  pointer.style.transform =
-    "translate(0px,0px)";
-
-
-  showMessage(
-    "VIEW RECENTERED"
-  );
-}
-
-
-/* =========================
-   ENABLE
-========================= */
-
-async function enableMotion() {
-
-  try {
-
-    /*
-      Same permission approach as
-      our successful gyro test.
-    */
-
-    if (
-      typeof DeviceOrientationEvent !==
-        "undefined" &&
-
-      typeof DeviceOrientationEvent
-        .requestPermission ===
-        "function"
-    ) {
-
-      const permission =
-        await DeviceOrientationEvent
-          .requestPermission();
-
-
-      if (
-        permission !==
-        "granted"
-      ) {
-
-        throw new Error(
-          "Motion permission denied."
-        );
-      }
-    }
-
-
-    window.addEventListener(
-      "deviceorientation",
-      handleOrientation,
-      true
-    );
-
-
-    start.style.display =
-      "none";
-
-
-    status.textContent =
-      "LISTENING";
-
-
-    setTimeout(
-      () => {
-
-        if (
-          eventCount === 0
-        ) {
-
-          status.textContent =
-            "NO SENSOR EVENTS";
         }
 
-      },
-      3000
+
+        assistant.say(
+          "CHILI VISION ONLINE"
+        );
+
+      }
+
+    }
+
+  );
+
+}
+
+
+/* =============================
+   RECENTER
+============================= */
+
+const recenterButton =
+  document.querySelector(
+    "#recenter"
+  );
+
+
+if (recenterButton) {
+
+  const cleanRecenter =
+    recenterButton.cloneNode(true);
+
+
+  recenterButton.replaceWith(
+    cleanRecenter
+  );
+
+
+  cleanRecenter.addEventListener(
+
+    "click",
+
+    () => {
+
+      engine.recenter();
+
+
+      assistant.say(
+        "VIEW RECENTERED"
+      );
+
+    }
+
+  );
+
+}
+
+
+/* =========================================
+   REAL PERSON DETECTION LOOP
+========================================= */
+
+async function runRealVision() {
+
+  const scannerLayer =
+    document.querySelector(
+      "#scannerLayer"
+    );
+
+
+  /*
+    Stop immediately if the scanner
+    layer isn't present.
+  */
+
+  if (!scannerLayer) {
+
+    console.error(
+      "CHILI VISION: scannerLayer missing."
+    );
+
+    assistant.say(
+      "SCANNER LAYER ERROR"
+    );
+
+    visionRunning =
+      false;
+
+    return;
+
+  }
+
+
+  while (visionRunning) {
+
+    try {
+
+      /*
+        Make sure the video actually
+        contains usable frames before
+        sending it into the detector.
+      */
+
+      if (
+        !cameraVideo ||
+        cameraVideo.videoWidth <= 0 ||
+        cameraVideo.videoHeight <= 0
+      ) {
+
+        await new Promise(
+          resolve =>
+            setTimeout(
+              resolve,
+              150
+            )
+        );
+
+        continue;
+
+      }
+
+
+      const detections =
+        await detector.detect(
+          cameraVideo
+        );
+
+
+      /*
+        For this stage Chili Vision
+        only renders people.
+
+        Other object classes can be
+        enabled after the real camera
+        pipeline is established.
+      */
+
+      const people =
+        detections.filter(
+
+          object =>
+            object.class ===
+            "person"
+
+        );
+
+
+      /*
+        Remove the boxes generated
+        during the previous frame.
+      */
+
+      scannerLayer
+        .querySelectorAll(
+          ".real-detection"
+        )
+        .forEach(
+          box =>
+            box.remove()
+        );
+
+
+      /*
+        Render each real person
+        detection.
+      */
+
+      for (
+        let i = 0;
+        i < people.length;
+        i++
+      ) {
+
+        const person =
+          people[i];
+
+
+        const [
+          x,
+          y,
+          width,
+          height
+        ] =
+          person.bbox;
+
+
+        /*
+          COCO coordinates are based
+          on the dimensions of the
+          camera frame.
+
+          Convert those coordinates
+          into percentages for the
+          glasses HUD.
+        */
+
+        const left =
+          (
+            x /
+            cameraVideo.videoWidth
+          ) * 100;
+
+
+        const top =
+          (
+            y /
+            cameraVideo.videoHeight
+          ) * 100;
+
+
+        const boxWidth =
+          (
+            width /
+            cameraVideo.videoWidth
+          ) * 100;
+
+
+        const boxHeight =
+          (
+            height /
+            cameraVideo.videoHeight
+          ) * 100;
+
+
+        const box =
+          document.createElement(
+            "div"
+          );
+
+
+        box.className =
+          "detection-box real-detection";
+
+
+        box.style.left =
+          `${left}%`;
+
+
+        box.style.top =
+          `${top}%`;
+
+
+        box.style.width =
+          `${boxWidth}%`;
+
+
+        box.style.height =
+          `${boxHeight}%`;
+
+
+        const confidence =
+          Math.round(
+            person.score *
+            100
+          );
+
+
+        box.innerHTML = `
+          <div class="detection-label">
+            PERSON ${confidence}%
+          </div>
+          <div class="track-dot"></div>
+        `;
+
+
+        scannerLayer.appendChild(
+          box
+        );
+
+      }
+
+
+      /*
+        Avoid running the detector
+        unnecessarily fast.
+      */
+
+      await new Promise(
+
+        resolve =>
+          setTimeout(
+            resolve,
+            100
+          )
+
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "REAL VISION LOOP ERROR:",
+        error
+      );
+
+
+      assistant.say(
+        "VISION TRACKING ERROR"
+      );
+
+
+      visionRunning =
+        false;
+
+    }
+
+  }
+
+
+  /*
+    Remove detection graphics when
+    real vision is switched off.
+  */
+
+  scannerLayer
+    .querySelectorAll(
+      ".real-detection"
+    )
+    .forEach(
+      box =>
+        box.remove()
+    );
+
+}
+
+
+/* =============================
+   CHILI SELECTION EVENTS
+============================= */
+
+window.addEventListener(
+
+  "chili:select",
+
+  async event => {
+
+    const action =
+      event.detail.action;
+
+
+    /* =========================
+       SCAN
+    ========================= */
+
+    if (
+      action ===
+      "scan"
+    ) {
+
+      /*
+        START REAL VISION
+      */
+
+      if (!visionRunning) {
+
+        visionRunning =
+          true;
+
+
+        assistant.say(
+          "STARTING REAL VISION..."
+        );
+
+
+        try {
+
+          /*
+            This uses ChiliCamera.
+
+            IMPORTANT:
+            The browser environment
+            must actually expose a
+            usable camera stream.
+
+            This code does NOT fake
+            a Ray-Ban camera feed.
+          */
+
+          await camera.start();
+
+
+          assistant.say(
+            "LOADING DETECTOR..."
+          );
+
+
+          await detector.load();
+
+
+          assistant.say(
+            "REAL VISION ONLINE"
+          );
+
+
+          runRealVision();
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "VISION STARTUP ERROR:",
+            error
+          );
+
+
+          visionRunning =
+            false;
+
+
+          assistant.say(
+            "VISION STARTUP ERROR"
+          );
+
+        }
+
+      }
+
+
+      /*
+        STOP REAL VISION
+      */
+
+      else {
+
+        visionRunning =
+          false;
+
+
+        assistant.say(
+          "REAL VISION OFFLINE"
+        );
+
+      }
+
+    }
+
+
+    /* =========================
+       MENU
+    ========================= */
+
+    else if (
+      action ===
+      "menu"
+    ) {
+
+      menu.toggle();
+
+    }
+
+
+    /* =========================
+       CHILI AI
+    ========================= */
+
+    else if (
+      action ===
+      "ai"
+    ) {
+
+      assistant.say(
+        "CHILI AI READY"
+      );
+
+    }
+
+
+    /* =========================
+       SYSTEM
+    ========================= */
+
+    else if (
+      action ===
+      "system"
+    ) {
+
+      assistant.say(
+        "SYSTEM NOMINAL"
+      );
+
+    }
+
+
+    /* =========================
+       OBJECTS
+    ========================= */
+
+    else if (
+      action ===
+      "objects"
+    ) {
+
+      assistant.say(
+        "OBJECT TRACKING READY"
+      );
+
+    }
+
+
+    /* =========================
+       WORLD
+    ========================= */
+
+    else if (
+      action ===
+      "world"
+    ) {
+
+      world.enable();
+
+
+      assistant.say(
+        "WORLD MODE ONLINE"
+      );
+
+    }
+
+  }
+
+);
+
+
+/* =============================
+   MODULE MESSAGES
+============================= */
+
+window.addEventListener(
+
+  "chili:message",
+
+  event => {
+
+    assistant.say(
+      event.detail.text
     );
 
   }
 
-  catch(error) {
+);
 
-    console.error(error);
 
-    document
-      .getElementById(
-        "startMessage"
-      )
-      .textContent =
-        "ERROR: " +
-        error.message;
+/* =============================
+   OPTIONAL DETECTION EVENTS
+============================= */
+
+window.addEventListener(
+
+  "chili:detections",
+
+  event => {
+
+    /*
+      Keep support for detection
+      events from other Chili
+      modules.
+
+      Do not create fake detections
+      here.
+    */
+
+    if (
+      !event.detail ||
+      !event.detail.objects
+    ) {
+
+      return;
+
+    }
+
   }
-}
+
+);
 
 
-/* =========================
-   BUTTONS
-========================= */
+/* =============================
+   WORLD / HEAD ORIENTATION
+============================= */
 
-document
-  .getElementById(
-    "enable"
-  )
-  .addEventListener(
-    "click",
-    enableMotion
+const worldMarker =
+  document.querySelector(
+    "#worldMarker"
   );
 
 
-document
-  .getElementById(
-    "recenter"
-  )
-  .addEventListener(
-    "click",
-    recenter
-  );
+window.addEventListener(
+
+  "chili:orientation",
+
+  event => {
+
+    if (!worldMarker) {
+
+      return;
+
+    }
+
+
+    const yaw =
+      event.detail.yaw;
+
+
+    const pitch =
+      event.detail.pitch;
+
+
+    /*
+      Marker moves opposite the
+      user's head movement.
+
+      This remains our basic
+      world-anchor experiment.
+    */
+
+    const x =
+      -yaw * 4;
+
+
+    const y =
+      pitch * 4;
+
+
+    worldMarker.style.transform =
+      `translate(
+        calc(-50% + ${x}px),
+        calc(-50% + ${y}px)
+      )`;
+
+  }
+
+);
+
+
+/* =============================
+   DEBUG ACCESS
+============================= */
+
+window.CHILI = {
+
+  engine,
+
+  scanner,
+
+  menu,
+
+  assistant,
+
+  world,
+
+  camera,
+
+  detector,
+
+  get visionRunning() {
+
+    return visionRunning;
+
+  }
+
+};
+
+
+console.log(
+  "CHILI VISION V7 CLEAN LOADED"
+);
 
 </script>
 
