@@ -439,19 +439,7 @@ body {
 
 <div id="scannerLayer"></div>
 
-<script type="module">
-import { ChiliScanner } from "./js/glasses-scanner.js";
 
-const scanner = new ChiliScanner();
-
-window.addEventListener("chili:select", (event) => {
-  if (event.detail.action === "scan") {
-    scanner.toggle();
-  }
-});
-
-window.chiliScanner = scanner;
-</script>
 
 <style>
 #scannerLayer {
@@ -462,23 +450,34 @@ window.chiliScanner = scanner;
 }
 
 .detection-box {
-  position:absolute;
-  border:2px solid #00ff88;
-  box-shadow:0 0 12px rgba(0,255,136,.5);
+  position: absolute;
+
+  border: 4px solid #00ff88;
+
+  box-shadow:
+    0 0 12px rgba(0,255,136,.9),
+    inset 0 0 12px rgba(0,255,136,.25);
+
+  pointer-events: none;
 }
 
 .detection-label {
-  position:absolute;
-  left:-2px;
-  top:-20px;
+  position: absolute;
+  left: -2px;
+  top: -34px;
 
-  padding:3px 6px;
+  padding: 7px 10px;
 
-  background:#00ff88;
-  color:#00140a;
+  background: #00ff88;
+  color: #00140a;
 
-  font-size:9px;
-  font-weight:bold;
+  font-size: 18px;
+  font-weight: bold;
+
+  letter-spacing: 1px;
+  white-space: nowrap;
+
+  box-shadow: 0 0 12px rgba(0,255,136,.7);
 }
 
 /* ===== V7 ADVANCED SCANNER ===== */
@@ -502,15 +501,28 @@ window.chiliScanner = scanner;
 
 #scanReadout {
   position: fixed;
-  right: 18px;
-  top: 60px;
-  padding: 8px 10px;
-  border-left: 1px solid #00ff88;
-  background: rgba(0,12,8,.72);
-  color: #6ba589;
-  font-size: 8px;
-  line-height: 1.7;
-  letter-spacing: 1px;
+  right: 24px;
+  top: 70px;
+
+  padding: 16px 20px;
+
+  border: 2px solid #00ff88;
+  border-radius: 8px;
+
+  background: rgba(0, 12, 8, .92);
+
+  color: #b8ffd9;
+
+  font-size: 18px;
+  font-weight: bold;
+
+  line-height: 1.8;
+  letter-spacing: 2px;
+
+  box-shadow:
+    0 0 12px rgba(0,255,136,.5);
+
+  z-index: 100;
 }
 
 #scanReadout strong {
@@ -786,7 +798,13 @@ import {
 import {
   ChiliWorld
 } from "./js/glasses-world.js";
+import {
+    ChiliCamera
+} from "./js/camera.js";
 
+import {
+    ChiliDetector
+} from "./js/detector.js";
 
 /* =============================
    SYSTEMS
@@ -823,7 +841,20 @@ const assistant =
 
 const world =
   new ChiliWorld();
+/* ==============================
+   REAL VISION SYSTEM
+============================== */
 
+const cameraVideo =
+    document.querySelector("#chiliCamera");
+
+const camera =
+    new ChiliCamera(cameraVideo);
+
+const detector =
+    new ChiliDetector();
+
+let visionRunning = false;
 
 /* =============================
    START MOTION
@@ -927,29 +958,186 @@ if (recenterButton) {
 /* =============================
    HEAD SELECTION
 ============================= */
+/* =========================================
+   REAL PERSON DETECTION LOOP
+========================================= */
+
+async function runRealVision() {
+
+    const scannerLayer =
+        document.querySelector("#scannerLayer");
+
+    while (visionRunning) {
+
+        try {
+
+            const detections =
+                await detector.detect(cameraVideo);
+
+            // For now we only want real people.
+            const people =
+                detections.filter(
+                    object =>
+                        object.class === "person"
+                );
+
+            // Remove boxes from the previous frame.
+            scannerLayer
+                .querySelectorAll(".real-detection")
+                .forEach(box => box.remove());
+
+
+            for (let i = 0; i < people.length; i++) {
+
+                const person = people[i];
+
+                const [
+                    x,
+                    y,
+                    width,
+                    height
+                ] = person.bbox;
+
+
+                /*
+                  COCO gives coordinates based on
+                  the camera frame.
+
+                  Convert them to percentages so
+                  they fit the glasses HUD.
+                */
+
+                const left =
+                    (x / cameraVideo.videoWidth) * 100;
+
+                const top =
+                    (y / cameraVideo.videoHeight) * 100;
+
+                const boxWidth =
+                    (width / cameraVideo.videoWidth) * 100;
+
+                const boxHeight =
+                    (height / cameraVideo.videoHeight) * 100;
+
+
+                const box =
+                    document.createElement("div");
+
+                box.className =
+                    "detection-box real-detection";
+
+                box.style.left =
+                    `${left}%`;
+
+                box.style.top =
+                    `${top}%`;
+
+                box.style.width =
+                    `${boxWidth}%`;
+
+                box.style.height =
+                    `${boxHeight}%`;
+
+
+                box.innerHTML = `
+                    <div class="detection-label">
+                        PERSON
+                        ${Math.round(person.score * 100)}%
+                    </div>
+                `;
+
+
+                scannerLayer.appendChild(box);
+            }
+
+
+            // Small delay keeps the glasses/browser
+            // from trying to run detection too fast.
+            await new Promise(
+                resolve => setTimeout(resolve, 100)
+            );
+
+        } catch (error) {
+
+            console.error(
+                "REAL VISION LOOP ERROR:",
+                error
+            );
+
+            assistant.say(
+                "VISION TRACKING ERROR"
+            );
+
+            visionRunning = false;
+        }
+    }
+
+
+    // Remove detection boxes when SCAN stops.
+    scannerLayer
+        .querySelectorAll(".real-detection")
+        .forEach(box => box.remove());
+}
 
 window.addEventListener(
   "chili:select",
-  event => {
+  async event => {
 
     const action =
       event.detail.action;
 
 
     if (
-      action === "scan"
-    ) {
+    action === "scan"
+) {
 
-      scanner.toggle();
+    if (!visionRunning) {
 
+        visionRunning = true;
 
-      assistant.say(
-        scanner.active
-          ? "SCANNER ONLINE"
-          : "SCANNER OFFLINE"
-      );
+        assistant.say(
+            "STARTING REAL VISION..."
+        );
+
+        try {
+
+            await camera.start();
+
+            assistant.say(
+                "LOADING DETECTOR..."
+            );
+
+            await detector.load();
+
+            assistant.say(
+                "REAL VISION ONLINE"
+            );
+
+            runRealVision();
+
+        } catch (error) {
+
+            console.error(
+                "VISION ERROR:",
+                error
+            );
+
+            visionRunning = false;
+
+            assistant.say(
+                "VISION STARTUP ERROR"
+            );
+        }
+
+    } else {
+
+        visionRunning = false;
+
+        assistant.say(
+            "REAL VISION OFFLINE"
+        );
     }
-
+}
 
     else if (
       action === "menu"
@@ -1130,6 +1318,20 @@ window.CHILI = {
 
 </script>
 <body>
+    <!-- REAL CHILI VISION CAMERA SOURCE -->
+<video
+  id="chiliCamera"
+  autoplay
+  playsinline
+  muted
+  style="
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  ">
+</video>
 
 <div class="grid"></div>
 
