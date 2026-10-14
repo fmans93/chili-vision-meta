@@ -411,4 +411,37 @@ window.addEventListener(
 // GO
 // ========================================
 
-boot();
+// Wait for user interaction before starting Chili Vision
+
+const startButton = document.createElement("button");
+
+startButton.textContent = "🌶️ START CHILI VISION";
+
+startButton.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    padding: 20px 30px;
+    background: #00ff99;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+`;
+
+document.body.appendChild(startButton);
+
+startButton.addEventListener("click", () => {
+
+    startButton.disabled = true;
+    startButton.textContent = "STARTING...";
+
+    boot();
+
+    startButton.remove();
+
+}, { once: true });
