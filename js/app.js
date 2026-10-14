@@ -210,9 +210,10 @@ async function boot() {
 
 
         alerts.show(
-            "VISION STARTUP ERROR",
-            true
-        );
+    "VISION STARTUP ERROR: " +
+    (error?.message || String(error)),
+    true
+);
     }
 }
 
